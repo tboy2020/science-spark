@@ -88,6 +88,10 @@ svg.scene{display:block;width:100%;height:auto}
 .gcard.yes{border-color:var(--green)} .gcard.no{border-color:var(--red);opacity:.75}
 .gcard .mark{font-size:1.1rem;font-weight:800}
 .gcard.yes .mark{color:var(--green)} .gcard.no .mark{color:var(--red)}
+.krow{display:flex;flex-wrap:wrap;gap:10px 14px;justify-content:center;padding:18px 8px}
+.kitem{text-align:center;min-width:66px}
+.kitem .ke{font-size:3rem;line-height:1.1}
+.kitem .kt{font-size:.8rem;color:var(--dim);margin-top:2px}
 </style>
 </head>
 <body>
@@ -98,7 +102,7 @@ svg.scene{display:block;width:100%;height:auto}
     <div class="sub" id="subhdr">Grade 2 · Earth &amp; Space</div>
   </header>
   <div class="pills" id="gradenav"></div>
-  <div class="gradehint">More grades are on the way — Grade 2 is ready to explore 🚀</div>
+  <div class="gradehint">Tap a grade — Kindergarten &amp; Grade 2 are ready to explore! 🚀</div>
   <div class="pills" id="topicnav"></div>
   <div class="moderow">
     <button class="mbtn" id="mLearn" onclick="setMode('learn')">📘 Learn</button>
@@ -135,10 +139,10 @@ function hearAgain(){ if(_cur)speak(_cur,true); }
 /* ===== STATE ===== */
 var S={ grade:'2', topic:'solar', mode:'learn', step:0 };
 var PROG=(function(){ try{ var p=JSON.parse(localStorage.getItem('sspark_prog')||'{}'); return (p&&typeof p==='object')?p:{}; }catch(e){ return {}; } })();
-PROG.learn=PROG.learn||{}; PROG.play=PROG.play||{};
+function gprog(){ var g=S.grade; if(!PROG[g]||typeof PROG[g]!=='object')PROG[g]={}; if(!PROG[g].learn)PROG[g].learn={}; if(!PROG[g].play)PROG[g].play={}; return PROG[g]; }
 function saveProg(){ try{ localStorage.setItem('sspark_prog',JSON.stringify(PROG)); }catch(e){} }
-function learnDone(k){ return !!(PROG.learn&&PROG.learn[k]); }
-function playDone(k){ return !!(PROG.play&&PROG.play[k]); }
+function learnDone(k){ return !!gprog().learn[k]; }
+function playDone(k){ return !!gprog().play[k]; }
 function allDone(){ for(var i=0;i<TOPIC_ORDER.length;i++){ if(!learnDone(TOPIC_ORDER[i])||!playDone(TOPIC_ORDER[i]))return false; } return true; }
 function doneCount(){ var n=0; for(var i=0;i<TOPIC_ORDER.length;i++){ if(learnDone(TOPIC_ORDER[i])&&playDone(TOPIC_ORDER[i]))n++; } return n; }
 var AF=null, rotT=0, revPhi=0;
@@ -292,7 +296,7 @@ function geoScene(){
 }
 
 /* ===== TOPICS (Grade 2 · Earth & Space — BJU Lessons 31–39) ===== */
-var TOPICS={
+var TOPICS_2={
   solar:{ name:'🌌 Solar System', tag:'Solar System', scene:solarScene, frames:function(){return[
     {main:'<b>God</b> made the solar system.', why:'The Bible (Genesis 1) says God <b>spoke</b> and the solar system was created. ✨'},
     {main:'The <b>Sun</b> is in the <b>center</b> of the solar system.', why:'Everything moves around the Sun. The center is the <b>Sun</b> — not the Earth.'},
@@ -337,13 +341,13 @@ var TOPICS={
     {main:'They <b>cannot</b> open the earth to look at the mantle and core.', why:'The inside is too hot and solid — we can’t cut the earth open! Now test yourself →'}
   ];} }
 };
-var TOPIC_ORDER=['solar','daynight','seasons','layers','waterland','continents','geologists'];
+var ORDER_2=['solar','daynight','seasons','layers','waterland','continents','geologists'];
 
 /* ===== PLAY QUESTIONS ===== */
 function M(q,opts,c){return{type:'mcq',q:q,opts:opts,correct:c};}
 function P(q,opts,c){return{type:'pick',q:q,opts:opts,correct:c};}
 function MX(q,opts,cs){return{type:'multi',q:q,opts:opts,corrects:cs};}
-var QS={
+var QS_2={
   solar:[
     M('According to Genesis 1, how did the solar system begin?',['God spoke and it was created','Rocks and gases by chance'],0),
     P('What is in the <b>center</b> of the solar system?',[{emoji:'☀️',t:'The Sun'},{emoji:'🌍',t:'The Earth'}],0),
@@ -399,16 +403,136 @@ var QS={
   ]
 };
 
+/* ===== KINDERGARTEN (Grade K · God's World) ===== */
+function kRow(items){ var o='<div class="krow">'; for(var i=0;i<items.length;i++)o+='<div class="kitem"><div class="ke">'+items[i].e+'</div><div class="kt">'+items[i].t+'</div></div>'; return o+'</div>'; }
+function plantScene(hi){ hi=hi||'';
+  var leafC=(hi==='leaves'?'var(--gold)':'#4cd68a'), stemC=(hi==='stem'?'var(--gold)':'#3bb36a'), rootC=(hi==='roots'?'var(--gold)':'#c08040');
+  return '<svg viewBox="0 0 300 236" class="scene"><rect width="300" height="236" fill="#9fd4ff"/>'+
+   '<text x="30" y="46" font-size="34">☀️</text><text x="244" y="52" font-size="26">💧</text>'+
+   '<rect x="0" y="184" width="300" height="52" fill="#6b4423"/>'+
+   '<path d="M150 188 L134 218 M150 188 L166 220 M150 192 L150 224" stroke="'+rootC+'" stroke-width="4" fill="none" stroke-linecap="round"/>'+
+   '<line x1="150" y1="188" x2="150" y2="96" stroke="'+stemC+'" stroke-width="7" stroke-linecap="round"/>'+
+   '<ellipse cx="118" cy="142" rx="26" ry="12" fill="'+leafC+'" transform="rotate(-20 118 142)"/>'+
+   '<ellipse cx="182" cy="126" rx="26" ry="12" fill="'+leafC+'" transform="rotate(20 182 126)"/>'+
+   '<circle cx="150" cy="72" r="9" fill="#ff7bb0"/><circle cx="165" cy="82" r="9" fill="#ff7bb0"/><circle cx="159" cy="99" r="9" fill="#ff7bb0"/><circle cx="141" cy="99" r="9" fill="#ff7bb0"/><circle cx="135" cy="82" r="9" fill="#ff7bb0"/>'+
+   '<circle cx="150" cy="86" r="8" fill="#ffd34d"/></svg>';
+}
+function daynightScene(mode){
+  if(mode==='day') return '<svg viewBox="0 0 300 180" class="scene"><rect width="300" height="180" fill="#7fc4ff"/><text x="150" y="86" font-size="54" text-anchor="middle">☀️</text><text x="232" y="120" font-size="30">☁️</text><text x="66" y="128" font-size="26">☁️</text><text x="150" y="160" font-size="15" fill="#05406e" text-anchor="middle">Day — bright, we play</text></svg>';
+  if(mode==='night') return '<svg viewBox="0 0 300 180" class="scene"><rect width="300" height="180" fill="#0b1836"/><text x="150" y="84" font-size="52" text-anchor="middle">🌙</text><text x="60" y="52" font-size="20">⭐</text><text x="240" y="60" font-size="20">⭐</text><text x="214" y="120" font-size="16">⭐</text><text x="78" y="128" font-size="16">⭐</text><text x="150" y="160" font-size="15" fill="#9fb6dd" text-anchor="middle">Night — dark, we sleep</text></svg>';
+  return '<svg viewBox="0 0 300 180" class="scene"><rect width="150" height="180" fill="#7fc4ff"/><rect x="150" width="150" height="180" fill="#0b1836"/><text x="75" y="92" font-size="46" text-anchor="middle">☀️</text><text x="225" y="92" font-size="44" text-anchor="middle">🌙</text><text x="256" y="52" font-size="16">⭐</text><text x="200" y="128" font-size="15">⭐</text><text x="75" y="156" font-size="13" fill="#05406e" text-anchor="middle">DAY</text><text x="225" y="156" font-size="13" fill="#9fb6dd" text-anchor="middle">NIGHT</text></svg>';
+}
+var TOPICS_K={
+  living:{ name:'🌱 Living or Not', tag:'Living things', scene:function(){return kRow([{e:'🌳',t:'living'},{e:'🐶',t:'living'},{e:'🪨',t:'not'},{e:'🚗',t:'not'}]);}, frames:function(){return[
+    {scene:function(){return kRow([{e:'🌳',t:'tree'},{e:'🐶',t:'dog'},{e:'🐦',t:'bird'},{e:'🌻',t:'flower'}]);}, main:'<b>God made</b> everything! Some things are <b>living</b>. 🌱', why:'Living things <b>grow</b> and need <b>food</b> and <b>water</b>.'},
+    {scene:function(){return kRow([{e:'🍎',t:'food'},{e:'💧',t:'water'},{e:'🌬️',t:'air'}]);}, main:'Living things <b>need food, water, and air</b>.', why:'A puppy eats and drinks. A plant drinks water and soaks up sun.'},
+    {scene:function(){return kRow([{e:'🪨',t:'rock'},{e:'🚗',t:'car'},{e:'🧸',t:'toy'},{e:'⚽',t:'ball'}]);}, main:'<b>Nonliving</b> things are <b>not alive</b>. 🪨', why:'A rock, a toy, a car — they do not eat, drink, or grow.'},
+    {scene:function(){return kRow([{e:'🌳',t:'living'},{e:'🪨',t:'nonliving'}]);}, main:'<span class="ok">Living grows & needs food. Nonliving does not.</span>', why:'God made them all. Now test yourself →'}
+  ];} },
+  senses:{ name:'👀 Five Senses', tag:'Senses', scene:function(){return kRow([{e:'👀',t:'see'},{e:'👂',t:'hear'},{e:'👃',t:'smell'},{e:'👅',t:'taste'},{e:'✋',t:'touch'}]);}, frames:function(){return[
+    {scene:function(){return kRow([{e:'👀',t:'see'},{e:'👂',t:'hear'},{e:'👃',t:'smell'},{e:'👅',t:'taste'},{e:'✋',t:'touch'}]);}, main:'God gave you <b>five senses</b>!', why:'See, hear, smell, taste, and touch help you learn about the world.'},
+    {scene:function(){return kRow([{e:'👀',t:'eyes see'},{e:'👂',t:'ears hear'}]);}, main:'👀 <b>Eyes</b> see. 👂 <b>Ears</b> hear.', why:'You see colors and shapes. You hear sounds and music.'},
+    {scene:function(){return kRow([{e:'👃',t:'nose smells'},{e:'👅',t:'tongue tastes'}]);}, main:'👃 <b>Nose</b> smells. 👅 <b>Tongue</b> tastes.', why:'You smell a flower. You taste your food.'},
+    {scene:function(){return kRow([{e:'✋',t:'touch'},{e:'🧸',t:'soft'},{e:'🪨',t:'hard'}]);}, main:'✋ Your <b>skin</b> can <b>touch</b> and feel.', why:'Soft or hard, hot or cold. Now test yourself →'}
+  ];} },
+  plants:{ name:'🌻 Plants', tag:'Plants', scene:function(){return plantScene('');}, frames:function(){return[
+    {scene:function(){return kRow([{e:'🌱',t:'seed'},{e:'🌿',t:'sprout'},{e:'🌻',t:'plant'}]);}, main:'Plants are <b>living</b>. They grow from a tiny <b>seed</b>. 🌱', why:'A seed grows into a big plant.'},
+    {scene:function(){return kRow([{e:'☀️',t:'sun'},{e:'💧',t:'water'},{e:'🌬️',t:'air'},{e:'🟫',t:'soil'}]);}, main:'Plants need <b>sun, water, air, and soil</b>.', why:'Give a plant these and it grows.'},
+    {scene:function(){return plantScene('roots');}, main:'<b>Roots</b> drink water from the soil.', why:'The roots grow down under the ground.'},
+    {scene:function(){return plantScene('leaves');}, main:'<b>Leaves</b> catch sunlight. The <b>stem</b> holds the plant up.', why:'Seed + sun + water → a plant. Now test yourself →'}
+  ];} },
+  animals:{ name:'🐾 Animals', tag:'Animals', scene:function(){return kRow([{e:'🐶',t:'dog'},{e:'🐦',t:'bird'},{e:'🐟',t:'fish'},{e:'🐝',t:'bee'}]);}, frames:function(){return[
+    {scene:function(){return kRow([{e:'🍖',t:'food'},{e:'💧',t:'water'},{e:'🌬️',t:'air'},{e:'🏠',t:'home'}]);}, main:'Animals are <b>living</b>. They need <b>food, water, air, and a home</b>.', why:'Just like you!'},
+    {scene:function(){return kRow([{e:'🐦',t:'nest'},{e:'🐟',t:'water'},{e:'🐝',t:'hive'},{e:'🐶',t:'house'}]);}, main:'Animals live in different <b>homes</b>.', why:'A bird in a nest, a fish in water, a bee in a hive.'},
+    {scene:function(){return kRow([{e:'🥚',t:'egg'},{e:'🐥',t:'chick'},{e:'🐔',t:'hen'}]);}, main:'Baby animals <b>grow up</b>. 🐛 → 🦋', why:'A caterpillar grows into a butterfly.'},
+    {scene:function(){return kRow([{e:'🐶',t:'animal'},{e:'🌳',t:'plant'}]);}, main:'<span class="ok">Animals eat, drink, move, and grow.</span>', why:'God made every animal. Now test yourself →'}
+  ];} },
+  body:{ name:'🧒 My Body', tag:'Body & health', scene:function(){return kRow([{e:'🧒',t:'you'},{e:'🍎',t:'eat'},{e:'💧',t:'drink'},{e:'😴',t:'sleep'}]);}, frames:function(){return[
+    {scene:function(){return kRow([{e:'🧒',t:'you'},{e:'🦵',t:'legs'},{e:'💪',t:'arms'},{e:'✋',t:'hands'}]);}, main:'God made your <b>body</b>.', why:'Head, arms, legs, hands, and feet all work together.'},
+    {scene:function(){return kRow([{e:'🍎',t:'fruit'},{e:'🥦',t:'veggies'},{e:'💧',t:'water'}]);}, main:'To stay <b>healthy</b>: eat good food and drink water.', why:'Healthy food helps you grow strong.'},
+    {scene:function(){return kRow([{e:'😴',t:'sleep'},{e:'🧼',t:'wash'},{e:'🏃',t:'play'}]);}, main:'Also: <b>sleep</b>, <b>wash</b>, and <b>play</b>.', why:'Rest and exercise keep you well. Now test yourself →'}
+  ];} },
+  weather:{ name:'🌦️ Weather', tag:'Weather & seasons', scene:function(){return kRow([{e:'☀️',t:'sunny'},{e:'🌧️',t:'rainy'},{e:'❄️',t:'snowy'},{e:'🌬️',t:'windy'}]);}, frames:function(){return[
+    {scene:function(){return kRow([{e:'☀️',t:'sunny'},{e:'🌧️',t:'rainy'},{e:'❄️',t:'snowy'},{e:'🌬️',t:'windy'}]);}, main:'<b>Weather</b> is what it is like <b>outside</b>.', why:'Sunny, rainy, snowy, or windy.'},
+    {scene:function(){return kRow([{e:'🌷',t:'Spring'},{e:'☀️',t:'Summer'},{e:'🍂',t:'Fall'},{e:'❄️',t:'Winter'}]);}, main:'There are <b>4 seasons</b>.', why:'Spring, Summer, Fall, Winter — they come again every year.'},
+    {scene:function(){return kRow([{e:'🩳',t:'hot day'},{e:'🧥',t:'cold day'}]);}, main:'We <b>dress</b> for the weather.', why:'Hot day → shorts. Cold day → a coat. Now test yourself →'}
+  ];} },
+  daynight:{ name:'☀️ Day & Night', tag:'Day & night', scene:function(){return daynightScene('both');}, frames:function(){return[
+    {scene:function(){return daynightScene('day');}, main:'In the <b>day</b>, the <b>Sun</b> shines. ☀️', why:'It is bright. We play, learn, and work.'},
+    {scene:function(){return daynightScene('night');}, main:'At <b>night</b>, we see the <b>Moon</b> 🌙 and <b>stars</b> ⭐.', why:'It is dark, and we sleep.'},
+    {scene:function(){return daynightScene('both');}, main:'<span class="ok">Day and night take turns.</span>', why:'Sun, then moon, again and again. Now test yourself →'}
+  ];} }
+};
+var ORDER_K=['living','senses','plants','animals','body','weather','daynight'];
+var QS_K={
+  living:[
+    P('Which one is <b>LIVING</b>?',[{emoji:'🐶',t:'Dog'},{emoji:'🪨',t:'Rock'}],0),
+    P('Which one is <b>NOT living</b>?',[{emoji:'🚗',t:'Car'},{emoji:'🌻',t:'Flower'}],0),
+    P('Which one can <b>GROW</b>?',[{emoji:'🌱',t:'Plant'},{emoji:'🧸',t:'Toy'}],0),
+    M('Living things need ___.',['food & water','nothing'],0),
+    M('Who made all living things?',['God','no one'],0)
+  ],
+  senses:[
+    P('You <b>SEE</b> with your…',[{emoji:'👀',t:'Eyes'},{emoji:'👂',t:'Ears'}],0),
+    P('You <b>HEAR</b> with your…',[{emoji:'👂',t:'Ears'},{emoji:'👃',t:'Nose'}],0),
+    P('You <b>TASTE</b> with your…',[{emoji:'👅',t:'Tongue'},{emoji:'👀',t:'Eyes'}],0),
+    P('You <b>SMELL</b> with your…',[{emoji:'👃',t:'Nose'},{emoji:'✋',t:'Hands'}],0),
+    M('How many senses do you have?',['5','2','10'],0)
+  ],
+  plants:[
+    M('Plants grow from a ___.',['seed','rock'],0),
+    P('What does a plant <b>need</b>?',[{emoji:'☀️',t:'Sun'},{emoji:'🍬',t:'Candy'}],0),
+    M('Which part drinks water from the soil?',['Roots','Leaves'],0),
+    M('Which part catches sunlight?',['Leaves','Roots'],0),
+    P('A plant needs water. Which gives water?',[{emoji:'🌧️',t:'Rain'},{emoji:'🧱',t:'Brick'}],0)
+  ],
+  animals:[
+    M('Animals need food, water, air, and a ___.',['home','toy'],0),
+    P('Where does a <b>fish</b> live?',[{emoji:'💧',t:'Water'},{emoji:'🏜️',t:'Dry sand'}],0),
+    P('Where does a <b>bird</b> live?',[{emoji:'🪹',t:'Nest'},{emoji:'🌊',t:'Under the sea'}],0),
+    P('A caterpillar grows into a…',[{emoji:'🦋',t:'Butterfly'},{emoji:'🐶',t:'Dog'}],0),
+    P('Which one is an <b>animal</b>?',[{emoji:'🐶',t:'Dog'},{emoji:'🌳',t:'Tree'}],0)
+  ],
+  body:[
+    P('What keeps you <b>healthy</b>?',[{emoji:'🍎',t:'Apple'},{emoji:'🍭',t:'Only candy'}],0),
+    P('What helps you <b>rest</b>?',[{emoji:'😴',t:'Sleep'},{emoji:'📺',t:'Stay up all night'}],0),
+    P('You clean your hands with…',[{emoji:'🧼',t:'Soap & water'},{emoji:'🟫',t:'Mud'}],0),
+    M('Running and playing is called…',['exercise','sitting still'],0),
+    M('Good food helps you grow ___.',['strong','sick'],0)
+  ],
+  weather:[
+    M('How many seasons are there?',['4','7','2'],0),
+    P('It is <b>cold</b> ❄️. What do you wear?',[{emoji:'🧥',t:'Coat'},{emoji:'🩳',t:'Shorts'}],0),
+    P('Which is <b>snowy</b> weather?',[{emoji:'❄️',t:'Snow'},{emoji:'☀️',t:'Sunny'}],0),
+    P('Leaves fall in which season? 🍂',[{emoji:'🍂',t:'Fall'},{emoji:'☀️',t:'Summer'}],0),
+    P('It is <b>raining</b> 🌧️. What do you need?',[{emoji:'☂️',t:'Umbrella'},{emoji:'🕶️',t:'Sunglasses'}],0)
+  ],
+  daynight:[
+    P('What do we see in the <b>day</b>?',[{emoji:'☀️',t:'Sun'},{emoji:'🌙',t:'Moon'}],0),
+    P('What do we see at <b>night</b>?',[{emoji:'🌙',t:'Moon & stars'},{emoji:'☀️',t:'Sun'}],0),
+    M('When do we sleep?',['Night','Day'],0),
+    P('The sky is <b>dark</b>. Is it day or night?',[{emoji:'🌙',t:'Night'},{emoji:'☀️',t:'Day'}],0)
+  ]
+};
+/* ===== GRADE REGISTRY ===== */
+var TOPICS, QS, TOPIC_ORDER;
+var GRADES={
+  'K':{ label:'Kindergarten · God’s World', topics:TOPICS_K, qs:QS_K, order:ORDER_K },
+  '2':{ label:'Grade 2 · Earth & Space', topics:TOPICS_2, qs:QS_2, order:ORDER_2 }
+};
+
 var GOOD=['Brilliant! 🌟','You got it! 🎉','Super smart! 🚀','Yes! ⭐','Great thinking! 💡','Nailed it! 👏'];
 var TRY=['Almost — look again 👀','Good try — think it through 🤔','So close! Try once more 💪','Not quite — you can do it!'];
 function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
 
 /* ===== NAV ===== */
 function renderGradeNav(){ var gs=['K','1','2','3','4','5'],h='';
-  for(var i=0;i<gs.length;i++){ if(gs[i]==='2')h+='<div class="pill sel">Grade 2</div>';
-    else h+='<div class="pill lock">'+(gs[i]==='K'?'K':'G'+gs[i])+' <small>🔒</small></div>'; }
+  for(var i=0;i<gs.length;i++){ var g=gs[i], lbl=(g==='K'?'K':'G'+g);
+    if(GRADES[g]) h+='<div class="pill'+(g===S.grade?' sel':'')+'" onclick="setGrade(\''+g+'\')">'+lbl+'</div>';
+    else h+='<div class="pill lock">'+lbl+' <small>🔒</small></div>'; }
   EL('gradenav').innerHTML=h;
 }
+function setGrade(g){ if(!GRADES[g])return; S.grade=g; var G=GRADES[g]; TOPICS=G.topics; QS=G.qs; TOPIC_ORDER=G.order; S.topic=G.order[0]; S.mode='learn'; S.step=0; play=null; EL('subhdr').textContent=G.label; renderGradeNav(); renderTopicNav(); render(); }
 function renderTopicNav(){ var h='';
   for(var i=0;i<TOPIC_ORDER.length;i++){ var k=TOPIC_ORDER[i], done=learnDone(k)&&playDone(k);
     h+='<div class="pill'+(k===S.topic?' sel':'')+'" onclick="setTopic(\''+k+'\')">'+TOPICS[k].name+(done?' ✓':'')+'</div>'; }
@@ -432,7 +556,7 @@ function syncModeBtns(){
 /* ===== LEARN ===== */
 function render(){ clearAnim(); if(S.mode==='play'||S.mode==='test')renderPlay(); else renderLearn(); syncModeBtns(); }
 function renderLearn(){ var T=TOPICS[S.topic], frames=T.frames(), f=frames[S.step], last=S.step>=frames.length-1;
-  if(last&&!PROG.learn[S.topic]){ PROG.learn[S.topic]=true; saveProg(); }
+  if(last&&!gprog().learn[S.topic]){ gprog().learn[S.topic]=true; saveProg(); }
   var sceneFn=f.scene||T.scene, sceneHtml=sceneFn();
   var isSvg=sceneHtml.indexOf('<svg')===0;
   var h='<div class="card">'+(isSvg?'<div class="scenewrap">'+sceneHtml+'</div>':sceneHtml)+
@@ -487,7 +611,7 @@ function renderResult(){ var r=play.pts/play.qs.length, stars=r>=1?'⭐⭐⭐':r
       '<div class="badge">📝 Full Test · '+tp+'%</div></div>';
     speak('You scored '+play.pts+' out of '+play.qs.length); return;
   }
-  PROG.play[S.topic]=true; saveProg();
+  gprog().play[S.topic]=true; saveProg();
   var msg=r>=1?'Perfect! You’re a Science Star! 🌟':r>=.6?'Great job! 🚀':'Good start — try again! 💪';
   EL('panel').innerHTML='<div class="card result"><div class="stars">'+stars+'</div><div class="big">'+play.pts+' / '+play.qs.length+'</div>'+
     '<div class="why" style="color:var(--gold)">'+msg+'</div><div class="navrow"><button class="btn" onclick="setMode(\'play\')">Play again 🔁</button>'+
@@ -496,7 +620,7 @@ function renderResult(){ var r=play.pts/play.qs.length, stars=r>=1?'⭐⭐⭐':r
 }
 
 /* ===== BOOT ===== */
-renderGradeNav(); renderTopicNav(); render();
+setGrade('2');
 </script>
 </body>
 </html>
