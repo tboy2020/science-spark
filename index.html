@@ -117,7 +117,7 @@ var soundOn=true;
 function toggleSound(){ soundOn=!soundOn; document.getElementById('sndBtn').textContent=soundOn?'🔊':'🔇';
   if(!soundOn){try{speechSynthesis.cancel();}catch(e){}} else speakCurrent(); }
 function clean(h){ return (h||'').replace(/<[^>]*>/g,' ')
-  .replace(/½/g,' and a half').replace(/→/g,' ')
+  .replace(/_+/g,' blank ').replace(/½/g,' and a half').replace(/→/g,' ')
   .replace(/[☀️🌙❄️🌷🍂⭐🏠🎉🌟🚀💡👀🤔💪🔆🌍🎮📘🌌🧱💧🗺️⛏️✨✝️🪨🕳️]/gu,' ')
   .replace(/\s+/g,' ').trim(); }
 function speak(h){ if(!soundOn)return; try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(clean(h));u.rate=.82;u.pitch=1.02;speechSynthesis.speak(u);}catch(e){} }
@@ -244,21 +244,23 @@ function waterScene(){ var cx=120,cy=120,R=92;
 
 /* ---- CONTINENTS MAP ---- */
 var CONTS=[
-  {k:'na',name:'North America',x:70,y:70,rx:42,ry:30},
-  {k:'sa',name:'South America',x:95,y:168,rx:24,ry:38},
-  {k:'eu',name:'Europe',x:182,y:62,rx:22,ry:16},
-  {k:'af',name:'Africa',x:192,y:132,rx:30,ry:40},
-  {k:'as',name:'Asia',x:270,y:70,rx:52,ry:34},
-  {k:'au',name:'Australia',x:300,y:168,rx:26,ry:18},
-  {k:'an',name:'Antarctica',x:180,y:228,rx:120,ry:14}
+  {k:'na',name:'North America',lx:92,ly:62,d:'M42,44 Q60,28 95,32 L128,34 Q150,42 142,58 L150,66 Q140,76 150,84 L132,92 L120,84 L112,96 Q104,110 96,104 L92,88 L74,86 Q60,80 56,66 L44,60 Z'},
+  {k:'sa',name:'South America',lx:135,ly:160,d:'M118,120 L150,116 Q162,128 156,144 L148,168 Q140,192 128,200 Q122,186 128,168 L118,150 Q110,136 118,120 Z'},
+  {k:'eu',name:'Europe',lx:232,ly:58,d:'M214,46 L242,40 Q254,48 246,58 L252,66 Q244,74 232,70 L224,74 Q216,66 222,58 L214,54 Z'},
+  {k:'af',name:'Africa',lx:247,ly:128,d:'M224,88 L268,84 Q282,96 276,112 L266,132 Q258,156 246,176 Q238,184 232,172 Q236,146 228,128 Q218,112 222,98 Z'},
+  {k:'as',name:'Asia',lx:340,ly:70,d:'M256,58 Q270,42 305,36 L350,34 Q392,40 406,58 Q412,70 398,78 L410,88 Q396,98 378,92 L366,102 Q350,96 344,106 L326,98 L312,108 Q298,100 290,90 L272,94 Q258,82 260,70 Z'},
+  {k:'au',name:'Australia',lx:378,ly:172,d:'M352,158 Q375,150 398,158 Q412,168 404,182 Q388,192 366,186 Q350,180 348,168 Z'},
+  {k:'an',name:'Antarctica',lx:222,ly:225,d:'M44,214 L400,214 Q410,222 402,230 L46,230 Q36,222 44,214 Z'}
 ];
+function contLabel(name,x,y){ var w=name.split(' ');
+  if(w.length===2) return '<text x="'+x+'" y="'+y+'" text-anchor="middle" font-size="8.5" fill="#05240f" font-weight="800"><tspan x="'+x+'" dy="-3">'+w[0]+'</tspan><tspan x="'+x+'" dy="9">'+w[1]+'</tspan></text>';
+  return '<text x="'+x+'" y="'+(y+3)+'" text-anchor="middle" font-size="9" fill="#05240f" font-weight="800">'+name+'</text>'; }
 function mapScene(hi,showNames){ hi=hi||'';
-  var out='<svg viewBox="0 0 360 250" class="scene"><rect x="0" y="0" width="360" height="250" fill="#0b1b3a"/>';
+  var out='<svg viewBox="0 0 440 244" class="scene"><rect width="440" height="244" fill="#0e2a4e"/>';
   for(var i=0;i<CONTS.length;i++){ var c=CONTS[i], on=(hi===c.k);
-    out+='<ellipse cx="'+c.x+'" cy="'+c.y+'" rx="'+c.rx+'" ry="'+c.ry+'" fill="'+(on?'var(--gold)':'#4c8f5e')+'" stroke="'+(on?'#fff':'#2f6b45')+'" stroke-width="'+(on?2.5:1)+'"/>';
-    if(showNames) out+='<text x="'+c.x+'" y="'+(c.y+3)+'" text-anchor="middle" font-size="9" fill="#06220f" font-weight="700">'+c.name.replace(' ','\n')+'</text>';
-  }
-  if(!showNames&&hi) out+='<text x="180" y="18" text-anchor="middle" font-size="13" fill="var(--gold)" font-weight="800">Which continent is gold?</text>';
+    out+='<path d="'+c.d+'" fill="'+(on?'var(--gold)':'#5bbd73')+'" stroke="'+(on?'#fff':'#2f7a49')+'" stroke-width="'+(on?2.5:1)+'"/>'; }
+  if(showNames)for(var j=0;j<CONTS.length;j++){ var c2=CONTS[j]; out+=contLabel(c2.name,c2.lx,c2.ly); }
+  if(!showNames&&hi) out+='<text x="220" y="16" text-anchor="middle" font-size="13" fill="var(--gold)" font-weight="800">Which continent is gold?</text>';
   return out+'</svg>';
 }
 
@@ -322,6 +324,7 @@ var TOPIC_ORDER=['solar','daynight','seasons','layers','waterland','continents',
 /* ===== PLAY QUESTIONS ===== */
 function M(q,opts,c){return{type:'mcq',q:q,opts:opts,correct:c};}
 function P(q,opts,c){return{type:'pick',q:q,opts:opts,correct:c};}
+function MX(q,opts,cs){return{type:'multi',q:q,opts:opts,corrects:cs};}
 var QS={
   solar:[
     M('According to Genesis 1, how did the solar system begin?',['God spoke and it was created','Rocks and gases by chance'],0),
@@ -329,7 +332,7 @@ var QS={
     M('How many <b>planets</b> are in our solar system?',['8','5','3'],0),
     M('Earth is which planet from the Sun?',['3rd','1st','5th'],0),
     M('<b>Earth’s shape</b> is a…',['sphere','square'],0),
-    M('Earth’s rotation gives us sunrise, daytime, sunset, and ___.',['nighttime','seasons'],0)
+    MX('Earth’s rotation gives us: sunrise, ___, ___, and nighttime. Tap the <b>TWO</b> blanks.',['Daytime','Sunset','Seasons'],[0,1])
   ],
   daynight:[
     M('When a toy top <b>rotates</b>, it ___.',['spins','slides'],0),
@@ -415,7 +418,7 @@ function learnStep(d){ var max=TOPICS[S.topic].frames().length-1,n=S.step+d; S.s
 
 /* ===== PLAY ===== */
 var play=null;
-function startPlay(){ play={ qs:QS[S.topic], i:0, pts:0, answered:false }; }
+function startPlay(){ play={ qs:QS[S.topic], i:0, pts:0, answered:false, found:[] }; }
 function renderPlay(){ if(!play)startPlay();
   if(play.i>=play.qs.length)return renderResult();
   var q=play.qs[play.i], T=TOPICS[S.topic], prog=Math.round(play.i/play.qs.length*100), o='';
@@ -428,12 +431,21 @@ function renderPlay(){ if(!play)startPlay();
   EL('panel').innerHTML='<div class="card"><div class="progress"><i style="width:'+prog+'%"></i></div>'+
     '<div class="q">'+q.q+'</div>'+o+'<div class="feed" id="feed"></div>'+
     '<div class="scorebar">⭐ '+play.pts+' / '+play.qs.length+' · '+T.name+'</div></div>';
-  play.answered=false; _cur=q.q; speak(_cur);
+  play.answered=false; play.found=[]; _cur=q.q; speak(_cur);
 }
 function answer(i){ if(play.answered)return; var q=play.qs[play.i], feed=EL('feed');
+  if(q.type==='multi')return answerMulti(i);
   if(i===q.correct){ play.answered=true; play.pts++; EL('o'+i).className+=' correct';
     feed.className='feed good'; feed.textContent=pick(GOOD); speak(feed.textContent); setTimeout(nextQ,1100);
   } else { EL('o'+i).className+=' wrong'; feed.className='feed bad'; feed.textContent=pick(TRY); speak(feed.textContent); }
+}
+function answerMulti(i){ var q=play.qs[play.i], feed=EL('feed');
+  if(play.found.indexOf(i)>=0)return;
+  if(q.corrects.indexOf(i)>=0){ play.found.push(i); EL('o'+i).className+=' correct';
+    if(play.found.length===q.corrects.length){ play.answered=true; play.pts++; feed.className='feed good'; feed.textContent=pick(GOOD); speak(feed.textContent); setTimeout(nextQ,1150); }
+    else { feed.className='feed good'; feed.textContent='✓ Yes! One more…'; speak('Yes, one more'); }
+  } else { EL('o'+i).className+=' wrong'; feed.className='feed bad'; feed.textContent=pick(TRY); speak(feed.textContent);
+    setTimeout(function(){ var el=EL('o'+i); if(el&&el.className.indexOf('correct')<0)el.className='opt'; },750); }
 }
 function nextQ(){ play.i++; renderPlay(); }
 function renderResult(){ var r=play.pts/play.qs.length, stars=r>=1?'⭐⭐⭐':r>=.6?'⭐⭐':r>0?'⭐':'💫',
