@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Science Spark</title>
+<style>
+:root{
+  --bg:#0a1430; --bg2:#0e1f3a; --card:#13294f; --card2:#1b3560;
+  --line:#2a4a7a; --ink:#eaf1ff; --dim:#9fb6dd;
+  --gold:#f6c445; --green:#4cd68a; --blue:#56b4ff; --pink:#ff7bb0; --red:#ff6b6b;
+  --sun:#ffcf4a; --space:#060c22;
+  --crust:#6bbf73; --mantle:#ff9e3d; --core:#ff5e57;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  background:
+    radial-gradient(1200px 500px at 80% -10%, #1a2f63 0%, transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, #122b57 0%, transparent 55%),
+    linear-gradient(180deg,var(--space),var(--bg) 40%,var(--bg2));
+  color:var(--ink); min-height:100vh;-webkit-user-select:none;user-select:none;
+}
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0}
+#app{position:relative;z-index:1;max-width:580px;margin:0 auto;padding:14px 14px 48px}
+header{text-align:center;margin:6px 0 10px}
+.logo{font-size:1.7rem;font-weight:800;letter-spacing:.3px}
+.logo .spark{color:var(--gold)}
+.sub{color:var(--dim);font-size:.9rem;margin-top:2px}
+.pills{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin:10px 0}
+.pill{background:var(--card);border:1px solid var(--line);color:var(--ink);
+  padding:7px 13px;border-radius:999px;font-size:.9rem;font-weight:600;cursor:pointer;transition:.15s}
+.pill.sel{background:var(--gold);color:#201500;border-color:var(--gold)}
+.pill.lock{opacity:.45;cursor:default}
+.pill small{opacity:.7;font-weight:500}
+.gradehint{text-align:center;color:var(--dim);font-size:.78rem;margin:-2px 0 4px}
+.moderow{display:flex;gap:8px;justify-content:center;align-items:center;margin:10px 0 4px}
+.mbtn{background:var(--card2);border:1px solid var(--line);color:var(--ink);
+  padding:9px 20px;border-radius:12px;font-weight:700;font-size:1rem;cursor:pointer}
+.mbtn.sel{background:var(--blue);color:#021226;border-color:var(--blue)}
+.iconbtn{width:42px;height:42px;border-radius:12px;background:var(--card2);border:1px solid var(--line);
+  color:var(--ink);font-size:1.15rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin-top:10px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.scenewrap{background:radial-gradient(120% 120% at 50% 20%,#0c1b3e,#060c22);
+  border:1px solid var(--line);border-radius:16px;padding:6px;overflow:hidden}
+svg.scene{display:block;width:100%;height:auto}
+.cap{margin-top:12px;text-align:center}
+.cmain{font-size:1.16rem;font-weight:700;line-height:1.35}
+.cmain b{color:var(--gold)}
+.why{margin-top:7px;color:var(--blue);font-size:.96rem;line-height:1.4}
+.why b{color:var(--green)}
+.ok{color:var(--green)}
+.navrow{display:flex;gap:9px;margin-top:14px}
+.btn{flex:1;background:var(--gold);color:#201500;border:none;border-radius:13px;padding:13px;font-size:1rem;font-weight:800;cursor:pointer}
+.btn.sec{background:var(--card2);color:var(--ink);border:1px solid var(--line)}
+.btn.ghost{background:transparent;color:var(--dim);border:1px solid var(--line);flex:0 0 auto;padding:13px 16px}
+.progress{height:7px;background:var(--card2);border-radius:99px;overflow:hidden;margin:2px 0 8px}
+.progress>i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--green));transition:.3s}
+.q{font-size:1.16rem;font-weight:700;text-align:center;line-height:1.4;margin:6px 4px 14px}
+.opts{display:grid;gap:10px}
+.opts.pick{grid-template-columns:1fr 1fr}
+.opt{background:var(--card2);border:2px solid var(--line);border-radius:14px;padding:14px;
+  font-size:1.02rem;font-weight:600;cursor:pointer;text-align:center;transition:.12s}
+.opt:active{transform:scale(.98)}
+.opt.pickcard{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px}
+.opt .emoji{font-size:2.5rem;line-height:1}
+.opt.correct{border-color:var(--green);background:rgba(76,214,138,.18)}
+.opt.wrong{border-color:var(--red);background:rgba(255,107,107,.15)}
+.feed{text-align:center;font-weight:800;font-size:1.08rem;margin-top:14px;min-height:1.4em}
+.feed.good{color:var(--green)}
+.feed.bad{color:var(--gold)}
+.scorebar{text-align:center;color:var(--dim);font-size:.82rem;margin-top:8px}
+.result{text-align:center;padding:10px}
+.result .stars{font-size:2.6rem}
+.result .big{font-size:1.5rem;font-weight:800;margin:6px 0}
+.badge{display:inline-block;background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:3px 10px;font-size:.78rem;color:var(--dim);margin-top:4px}
+.gscene{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;padding:14px 6px}
+.gcard{background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:10px 8px;width:118px;text-align:center}
+.gcard .gi{font-size:2rem}
+.gcard .gt{font-size:.82rem;margin-top:4px;color:var(--dim)}
+.gcard.yes{border-color:var(--green)} .gcard.no{border-color:var(--red);opacity:.75}
+.gcard .mark{font-size:1.1rem;font-weight:800}
+.gcard.yes .mark{color:var(--green)} .gcard.no .mark{color:var(--red)}
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+<div id="app">
+  <header>
+    <div class="logo">⚡ Science <span class="spark">Spark</span></div>
+    <div class="sub" id="subhdr">Grade 2 · Earth &amp; Space</div>
+  </header>
+  <div class="pills" id="gradenav"></div>
+  <div class="gradehint">More grades are on the way — Grade 2 is ready to explore 🚀</div>
+  <div class="pills" id="topicnav"></div>
+  <div class="moderow">
+    <button class="mbtn" id="mLearn" onclick="setMode('learn')">📘 Learn</button>
+    <button class="mbtn" id="mPlay" onclick="setMode('play')">🎮 Play</button>
+    <button class="iconbtn" id="sndBtn" onclick="toggleSound()" title="Read aloud">🔊</button>
+  </div>
+  <div id="panel"></div>
+</div>
+<script>
+/* ===== STARFIELD ===== */
+(function(){ var c=document.getElementById('stars'),x=c.getContext('2d'),st=[];
+  function size(){ c.width=innerWidth;c.height=innerHeight;st=[];
+    var n=Math.min(90,Math.floor(innerWidth*innerHeight/14000));
+    for(var i=0;i<n;i++)st.push({x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.3+.3,t:Math.random()*6.28,s:Math.random()*.03+.008}); }
+  function draw(){ x.clearRect(0,0,c.width,c.height);
+    for(var i=0;i<st.length;i++){var s=st[i];s.t+=s.s;x.globalAlpha=.4+.6*Math.abs(Math.sin(s.t));x.fillStyle='#cfe0ff';x.beginPath();x.arc(s.x,s.y,s.r,0,6.28);x.fill();}
+    requestAnimationFrame(draw);} size();draw();addEventListener('resize',size);
+})();
+
+/* ===== VOICE ===== */
+var soundOn=true;
+function toggleSound(){ soundOn=!soundOn; document.getElementById('sndBtn').textContent=soundOn?'🔊':'🔇';
+  if(!soundOn){try{speechSynthesis.cancel();}catch(e){}} else speakCurrent(); }
+function clean(h){ return (h||'').replace(/<[^>]*>/g,' ')
+  .replace(/½/g,' and a half').replace(/→/g,' ')
+  .replace(/[☀️🌙❄️🌷🍂⭐🏠🎉🌟🚀💡👀🤔💪🔆🌍🎮📘🌌🧱💧🗺️⛏️✨✝️🪨🕳️]/gu,' ')
+  .replace(/\s+/g,' ').trim(); }
+function speak(h){ if(!soundOn)return; try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(clean(h));u.rate=.82;u.pitch=1.02;speechSynthesis.speak(u);}catch(e){} }
+var _cur=''; function speakCurrent(){ if(_cur)speak(_cur); }
+
+/* ===== STATE ===== */
+var S={ grade:'2', topic:'solar', mode:'learn', step:0 };
+var AF=null, rotT=0, revPhi=0;
+function clearAnim(){ if(AF){cancelAnimationFrame(AF);AF=null;} try{speechSynthesis.cancel();}catch(e){} }
+function EL(id){ return document.getElementById(id); }
+
+/* ===== SHARED SVG ===== */
+function defs(){ return '<defs>'+
+  '<radialGradient id="sunG" cx="40%" cy="38%"><stop offset="0%" stop-color="#fff2b0"/><stop offset="70%" stop-color="#ffcf4a"/><stop offset="100%" stop-color="#ff9e1f"/></radialGradient>'+
+  '<radialGradient id="earthG" cx="38%" cy="34%"><stop offset="0%" stop-color="#7fc4ff"/><stop offset="60%" stop-color="#2f7fd6"/><stop offset="100%" stop-color="#17508f"/></radialGradient>'+
+  '</defs>'; }
+function sunGroup(cx,cy,r){ var rays='';
+  for(var i=0;i<12;i++){var a=i*30*Math.PI/180;rays+='<line x1="'+(cx+Math.cos(a)*(r+4))+'" y1="'+(cy+Math.sin(a)*(r+4))+'" x2="'+(cx+Math.cos(a)*(r+15))+'" y2="'+(cy+Math.sin(a)*(r+15))+'" stroke="var(--sun)" stroke-width="3" stroke-linecap="round" opacity=".85"/>';}
+  return '<circle cx="'+cx+'" cy="'+cy+'" r="'+(r+13)+'" fill="var(--sun)" opacity=".18"/>'+rays+'<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="url(#sunG)"/>'; }
+function continents(){ return '<ellipse cx="-16" cy="-10" rx="16" ry="11" fill="#4cd68a" opacity=".92"/><ellipse cx="12" cy="8" rx="13" ry="16" fill="#5fe09a" opacity=".92"/><ellipse cx="18" cy="-16" rx="8" ry="6" fill="#4cd68a" opacity=".9"/>'; }
+
+/* ---- SOLAR SYSTEM ---- */
+var PLANETS=[['Mercury',6,'#b7b7a4'],['Venus',9,'#e8b06a'],['Earth',10,'url(#earthG)'],['Mars',8,'#d9603b'],['Jupiter',17,'#e0b07a'],['Saturn',15,'#e8d08a'],['Uranus',12,'#8fe0e0'],['Neptune',12,'#4f7fe0']];
+function solarScene(){
+  var x=70, y=105, out='<svg viewBox="0 0 360 180" class="scene">'+defs()+sunGroup(30,y,22);
+  for(var i=0;i<PLANETS.length;i++){ var p=PLANETS[i]; x+=p[1]+16;
+    var isE=(p[0]==='Earth');
+    if(isE) out+='<circle cx="'+x+'" cy="'+y+'" r="'+(p[1]+6)+'" fill="none" stroke="var(--gold)" stroke-width="2"/>';
+    out+='<circle cx="'+x+'" cy="'+y+'" r="'+p[1]+'" fill="'+p[2]+'"/>';
+    if(isE) out+='<text x="'+x+'" y="'+(y+p[1]+16)+'" text-anchor="middle" font-size="11" fill="var(--gold)" font-weight="800">Earth (3rd)</text>';
+    x+=p[1];
+  }
+  out+='<text x="30" y="'+(y+42)+'" text-anchor="middle" font-size="11" fill="var(--sun)" font-weight="800">Sun</text>';
+  out+='<text x="180" y="22" text-anchor="middle" font-size="12" fill="var(--dim)">The Sun is in the CENTER · 8 planets</text>';
+  return out+'</svg>';
+}
+
+/* ---- ROTATION (day & night) ---- */
+function rotScene(){ var cx=252,cy=112,r=56;
+  return '<svg viewBox="0 0 360 230" class="scene">'+defs()+sunGroup(60,112,26)+
+    '<text x="60" y="180" text-anchor="middle" font-size="13" fill="var(--sun)" font-weight="700">The Sun</text>'+
+    '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="url(#earthG)" stroke="#0c2f58" stroke-width="2"/>'+
+    '<g id="rSpin" transform="translate('+cx+' '+cy+')">'+continents()+
+      '<g id="rHome" transform="translate(-'+r+' 0)"><circle r="7" fill="#fff"/><text y="5" text-anchor="middle" font-size="12">🏠</text></g></g>'+
+    '<path d="M'+cx+' '+(cy-r)+' A'+r+' '+r+' 0 0 1 '+cx+' '+(cy+r)+' Z" fill="#060c22" opacity=".60"/>'+
+    '<line x1="'+cx+'" y1="'+(cy-r-6)+'" x2="'+cx+'" y2="'+(cy+r+6)+'" stroke="#9fb6dd" stroke-width="1.5" stroke-dasharray="4 4" opacity=".55"/>'+
+    '<text x="'+cx+'" y="'+(cy-r-12)+'" text-anchor="middle" font-size="11" fill="#9fb6dd">axis</text>'+
+    '<text x="'+cx+'" y="210" text-anchor="middle" font-size="16" font-weight="800" id="rState" fill="var(--gold)">☀️ Daytime</text></svg>';
+}
+function rotRun(){ var spin=EL('rSpin'),state=EL('rState'); if(!spin)return;
+  function f(){ rotT+=0.75; spin.setAttribute('transform','translate(252 112) rotate('+rotT+')');
+    if(state) state.textContent=Math.cos(rotT*Math.PI/180)>0?'☀️ Daytime for the 🏠':'🌙 Night for the 🏠';
+    AF=requestAnimationFrame(f);} f();
+}
+
+/* ---- REVOLUTION (the year) ---- */
+function revScene(){ var cx=180,cy=150,rx=140,ry=104;
+  return '<svg viewBox="0 0 360 300" class="scene">'+defs()+
+    '<ellipse cx="'+cx+'" cy="'+cy+'" rx="'+rx+'" ry="'+ry+'" fill="none" stroke="#2a4a7a" stroke-width="2" stroke-dasharray="5 6"/>'+
+    sunGroup(cx,cy,26)+
+    '<g id="vEarth"><circle r="15" fill="url(#earthG)" stroke="#0c2f58" stroke-width="1.5"/><ellipse cx="-5" cy="-3" rx="6" ry="4" fill="#4cd68a"/><ellipse cx="4" cy="4" rx="5" ry="6" fill="#5fe09a"/></g>'+
+    '<text x="'+cx+'" y="'+(cy+5)+'" text-anchor="middle" font-size="12" fill="#5c3a00" font-weight="800">SUN</text>'+
+    '<text x="'+cx+'" y="284" text-anchor="middle" font-size="15" font-weight="800" fill="var(--gold)" id="vDay">Day 1 of 365</text>'+
+    '<text x="'+cx+'" y="20" text-anchor="middle" font-size="12" fill="var(--dim)">One lap around the Sun = one YEAR</text></svg>';
+}
+function revRun(){ var e=EL('vEarth'),day=EL('vDay'); if(!e)return; var cx=180,cy=150,rx=140,ry=104;
+  function f(){ revPhi+=0.014; var x=cx+rx*Math.cos(revPhi),y=cy+ry*Math.sin(revPhi);
+    e.setAttribute('transform','translate('+x.toFixed(1)+' '+y.toFixed(1)+')');
+    var fr=(((revPhi%(2*Math.PI))+2*Math.PI)%(2*Math.PI))/(2*Math.PI);
+    if(day)day.textContent='Day '+(Math.floor(fr*365)+1)+' of 365'; AF=requestAnimationFrame(f);} f();
+}
+
+/* ---- SEASONS (tilt) ---- */
+var SEASONS=[{x:60,y:150,label:'☀️ SUMMER',col:'var(--gold)'},{x:220,y:40,label:'🍂 FALL',col:'var(--pink)'},{x:380,y:150,label:'❄️ WINTER',col:'var(--blue)'},{x:220,y:260,label:'🌷 SPRING',col:'var(--green)'}];
+function tiltedEarth(x,y){ var ax=Math.sin(23.5*Math.PI/180),ay=-Math.cos(23.5*Math.PI/180),L=30;
+  return '<circle cx="'+x+'" cy="'+y+'" r="24" fill="url(#earthG)" stroke="#0c2f58" stroke-width="1.5" opacity=".85"/>'+
+    '<line x1="'+(x-ax*L)+'" y1="'+(y-ay*L)+'" x2="'+(x+ax*L)+'" y2="'+(y+ay*L)+'" stroke="#eaf1ff" stroke-width="2.5"/>'+
+    '<text x="'+(x+ax*L)+'" y="'+(y+ay*L-3)+'" text-anchor="middle" font-size="12">⭐</text>'; }
+function seaScene(){ var cx=220,cy=150,e='';
+  for(var i=0;i<SEASONS.length;i++)e+=tiltedEarth(SEASONS[i].x,SEASONS[i].y);
+  return '<svg viewBox="0 0 440 300" class="scene">'+defs()+
+    '<ellipse cx="'+cx+'" cy="'+cy+'" rx="150" ry="98" fill="none" stroke="#2a4a7a" stroke-width="2" stroke-dasharray="5 6"/>'+
+    sunGroup(cx,cy,28)+'<g id="sRays"></g>'+e+'<g id="sGlow"></g>'+
+    '<text x="'+cx+'" y="155" text-anchor="middle" font-size="12" fill="#5c3a00" font-weight="800">SUN</text></svg>';
+}
+function setSeason(k){ var s=SEASONS[k],cx=220,cy=150,g=EL('sGlow'),rays=EL('sRays'); if(!g)return;
+  g.innerHTML='<circle cx="'+s.x+'" cy="'+s.y+'" r="34" fill="none" stroke="'+s.col+'" stroke-width="3"/><text x="'+s.x+'" y="'+(s.y>cy?s.y+52:s.y-40)+'" text-anchor="middle" font-size="16" font-weight="800" fill="'+s.col+'">'+s.label+'</text>';
+  var rr=''; for(var i=-2;i<=2;i++)rr+='<line x1="'+cx+'" y1="'+(cy+i*8)+'" x2="'+s.x+'" y2="'+(s.y+i*2.4)+'" stroke="var(--sun)" stroke-width="2" opacity=".5"/>';
+  rays.innerHTML=rr;
+}
+
+/* ---- EARTH LAYERS ---- */
+function layersScene(hi){
+  var cx=160,cy=94,R=82; hi=hi||'';
+  function ring(r,fill,op,on){ return '<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" fill="'+fill+'" opacity="'+(on?1:op)+'"'+(on?' stroke="#fff" stroke-width="3"':'')+'/>'; }
+  function row(y,col,on,name,desc){ return '<circle cx="34" cy="'+(y-4)+'" r="8" fill="'+col+'"'+(on?' stroke="#fff" stroke-width="2"':'')+'/>'+
+    '<text x="52" y="'+y+'" font-size="14" font-weight="800" fill="'+(on?'#fff':col)+'">'+name+'</text>'+
+    '<text x="'+(52+(name.length*9)+8)+'" y="'+y+'" font-size="11" fill="var(--dim)">'+desc+'</text>'; }
+  return '<svg viewBox="0 0 320 260" class="scene">'+
+    ring(R,'var(--crust)',.92,hi==='crust')+
+    ring(R-9,'var(--mantle)',.96,hi==='mantle')+
+    ring(34,'var(--core)',1,hi==='core')+
+    row(196,'var(--crust)',hi==='crust','Crust','— thinnest, solid rock')+
+    row(224,'var(--mantle)',hi==='mantle','Mantle','— melted rock')+
+    row(252,'var(--core)',hi==='core','Core','— the center')+
+    '</svg>';
+}
+
+/* ---- WATER & LAND ---- */
+function waterScene(){ var cx=120,cy=120,R=92;
+  return '<svg viewBox="0 0 300 240" class="scene">'+defs()+
+    '<circle cx="'+cx+'" cy="'+cy+'" r="'+R+'" fill="url(#earthG)" stroke="#0c2f58" stroke-width="2"/>'+
+    '<ellipse cx="'+(cx-28)+'" cy="'+(cy-24)+'" rx="30" ry="22" fill="#4cd68a"/>'+
+    '<ellipse cx="'+(cx+26)+'" cy="'+(cy+18)+'" rx="24" ry="30" fill="#5fe09a"/>'+
+    '<ellipse cx="'+(cx+34)+'" cy="'+(cy-34)+'" rx="14" ry="11" fill="#4cd68a"/>'+
+    '<text x="'+cx+'" y="228" text-anchor="middle" font-size="12" fill="var(--blue)" font-weight="700">💧 Most of Earth is WATER</text>'+
+    // ratio bar
+    '<rect x="222" y="60" width="26" height="120" rx="6" fill="#143a66" stroke="var(--line)"/>'+
+    '<rect x="222" y="95" width="26" height="85" rx="6" fill="var(--blue)" opacity=".8"/>'+
+    '<text x="235" y="54" text-anchor="middle" font-size="10" fill="var(--green)">land</text>'+
+    '<text x="235" y="140" text-anchor="middle" font-size="10" fill="#eaf1ff" transform="rotate(90 235 140)">water</text>'+
+    '</svg>';
+}
+
+/* ---- CONTINENTS MAP ---- */
+var CONTS=[
+  {k:'na',name:'North America',x:70,y:70,rx:42,ry:30},
+  {k:'sa',name:'South America',x:95,y:168,rx:24,ry:38},
+  {k:'eu',name:'Europe',x:182,y:62,rx:22,ry:16},
+  {k:'af',name:'Africa',x:192,y:132,rx:30,ry:40},
+  {k:'as',name:'Asia',x:270,y:70,rx:52,ry:34},
+  {k:'au',name:'Australia',x:300,y:168,rx:26,ry:18},
+  {k:'an',name:'Antarctica',x:180,y:228,rx:120,ry:14}
+];
+function mapScene(hi,showNames){ hi=hi||'';
+  var out='<svg viewBox="0 0 360 250" class="scene"><rect x="0" y="0" width="360" height="250" fill="#0b1b3a"/>';
+  for(var i=0;i<CONTS.length;i++){ var c=CONTS[i], on=(hi===c.k);
+    out+='<ellipse cx="'+c.x+'" cy="'+c.y+'" rx="'+c.rx+'" ry="'+c.ry+'" fill="'+(on?'var(--gold)':'#4c8f5e')+'" stroke="'+(on?'#fff':'#2f6b45')+'" stroke-width="'+(on?2.5:1)+'"/>';
+    if(showNames) out+='<text x="'+c.x+'" y="'+(c.y+3)+'" text-anchor="middle" font-size="9" fill="#06220f" font-weight="700">'+c.name.replace(' ','\n')+'</text>';
+  }
+  if(!showNames&&hi) out+='<text x="180" y="18" text-anchor="middle" font-size="13" fill="var(--gold)" font-weight="800">Which continent is gold?</text>';
+  return out+'</svg>';
+}
+
+/* ---- GEOLOGIST ---- */
+function geoScene(){
+  return '<div class="gscene">'+
+   '<div class="gcard yes"><div class="gi">🕳️</div><div class="gt">dig holes</div><div class="mark">✓</div></div>'+
+   '<div class="gcard yes"><div class="gi">🪨</div><div class="gt">study rocks</div><div class="mark">✓</div></div>'+
+   '<div class="gcard yes"><div class="gi">🦇</div><div class="gt">study caves</div><div class="mark">✓</div></div>'+
+   '<div class="gcard no"><div class="gi">🌍</div><div class="gt">open the earth to see inside</div><div class="mark">✗</div></div>'+
+   '</div>';
+}
+
+/* ===== TOPICS (Grade 2 · Earth & Space — BJU Lessons 31–39) ===== */
+var TOPICS={
+  solar:{ name:'🌌 Solar System', tag:'Solar System', scene:solarScene, frames:function(){return[
+    {main:'<b>God</b> made the solar system.', why:'The Bible (Genesis 1) says God <b>spoke</b> and the solar system was created. ✨'},
+    {main:'The <b>Sun</b> is in the <b>center</b> of the solar system.', why:'Everything moves around the Sun. The center is the <b>Sun</b> — not the Earth.'},
+    {main:'There are <b>8 planets</b>. Earth is the <b>3rd</b> from the Sun.', why:'Count from the Sun: Mercury, Venus, then <b>Earth</b> — number 3.'},
+    {main:'Earth’s <b>rotation</b> gives us sunrise, daytime, sunset, and night.', why:'As Earth spins, the Sun seems to rise and set. Now test yourself →'}
+  ];} },
+  daynight:{ name:'🌍 Day & Night', tag:'Rotation', scene:rotScene, run:rotRun, frames:function(){return[
+    {main:'Earth is shaped like a <b>sphere</b> (a ball) and it <b>spins</b>.', why:'When a toy top <b>rotates</b>, it <b>spins</b> — Earth rotates too.'},
+    {main:'Earth spins on its <b>axis</b>.', why:'The axis is an imaginary line running through the <b>center</b> of the earth.'},
+    {main:'One full spin = <b>one day</b>.', why:'The time it takes the earth to <b>rotate one time</b> is called a <b>day</b>.'},
+    {main:'<b>Rotation</b> gives us <b>day and night</b>.', why:'Daytime and nighttime are caused by the <b>rotation</b> of the earth — NOT revolution! Now test yourself →'}
+  ];} },
+  seasons:{ name:'🔆 Seasons', tag:'Revolution + Tilt', frames:function(){return[
+    {scene:revScene, run:revRun, main:'Earth <b>revolves</b> (moves) around the Sun.', why:'Moving around the Sun is <b>revolution</b>. An <b>orbit</b> is the earth’s revolution around the Sun.'},
+    {scene:revScene, run:revRun, main:'One revolution around the Sun = <b>365 days</b> = <b>one year</b>.', why:'Revolution takes a YEAR. (Spinning once = a day. Going around the Sun once = a year.)'},
+    {scene:seaScene, run:function(){setSeason(0);}, main:'Earth is <b>tilted</b>. Tilted <b>TOWARD</b> the Sun → <b>SUMMER</b> ☀️.', why:'That part of the earth gets <b>more direct sunlight</b>.'},
+    {scene:seaScene, run:function(){setSeason(2);}, main:'Tilted <b>AWAY</b> from the Sun → <b>WINTER</b> ❄️.', why:'That part gets <b>less direct sunlight</b>. The sunny parts change as the earth <b>revolves</b>.'},
+    {scene:seaScene, run:function(){setSeason(0);}, main:'<b>Two things</b> cause the seasons: <b>revolution</b> + <b>tilt</b>.', why:'Genesis 8:22 tells us <b>God</b> made the seasons. Now test yourself →'}
+  ];} },
+  layers:{ name:'🧱 Earth’s Layers', tag:'Layers', scene:function(){return layersScene('');}, frames:function(){return[
+    {scene:function(){return layersScene('');}, main:'The earth has <b>3 layers</b>: crust, mantle, core.', why:'Like a peach: thin skin, thick middle, hard pit in the center.'},
+    {scene:function(){return layersScene('crust');}, main:'The <b>crust</b> is the <b>thinnest</b> layer, made of <b>solid rock</b>.', why:'It is the outside layer — the one we live on.'},
+    {scene:function(){return layersScene('mantle');}, main:'The <b>mantle</b> is made of <b>melted</b> rock.', why:'It is the thick middle layer, under the crust.'},
+    {scene:function(){return layersScene('core');}, main:'The <b>core</b> is the layer at the <b>center</b>.', why:'The very middle of the earth. Now test yourself →'}
+  ];} },
+  waterland:{ name:'💧 Water & Land', tag:'Water & Land', scene:waterScene, frames:function(){return[
+    {main:'Most of the earth’s surface is covered by <b>water</b>.', why:'There is more water than land on Earth.'},
+    {main:'The largest areas of land are the <b>continents</b>.', why:'There are 7 continents.'},
+    {main:'Oceans have <b>salt</b> water. Rivers have <b>fresh</b> water.', why:'Big bodies of SALT water = oceans. Rivers are FRESH water.'},
+    {main:'A <b>glacier</b> is a huge, solid sheet of moving fresh water. An <b>island</b> is land surrounded by water.', why:'Antarctica is covered with snow and ice. Now test yourself →'}
+  ];} },
+  continents:{ name:'🗺️ Continents', tag:'Continents', scene:function(){return mapScene('',true);}, frames:function(){return[
+    {scene:function(){return mapScene('',true);}, main:'There are <b>7 continents</b> — the largest areas of land.', why:'North America, South America, Europe, Asia, Africa, Australia, Antarctica.'},
+    {scene:function(){return mapScene('na',true);}, main:'We live in <b>North America</b>.', why:'It is the gold one, up on the left.'},
+    {scene:function(){return mapScene('as',true);}, main:'<b>Asia</b> is the biggest continent.', why:'It is the large one on the right.'},
+    {scene:function(){return mapScene('an',true);}, main:'<b>Antarctica</b> is at the bottom, covered in ice.', why:'Now match them on the map → test yourself!'}
+  ];} },
+  geologists:{ name:'⛏️ Geologists', tag:'Geologists', scene:geoScene, frames:function(){return[
+    {main:'A <b>geologist</b> studies the earth’s <b>rocks and crust</b>.', why:'They learn about the earth’s crust.'},
+    {main:'They <b>study caves</b>, <b>dig holes</b>, and <b>study rocks</b>.', why:'These are three ways to find out about the crust.'},
+    {main:'They <b>cannot</b> open the earth to look at the mantle and core.', why:'The inside is too hot and solid — we can’t cut the earth open! Now test yourself →'}
+  ];} }
+};
+var TOPIC_ORDER=['solar','daynight','seasons','layers','waterland','continents','geologists'];
+
+/* ===== PLAY QUESTIONS ===== */
+function M(q,opts,c){return{type:'mcq',q:q,opts:opts,correct:c};}
+function P(q,opts,c){return{type:'pick',q:q,opts:opts,correct:c};}
+var QS={
+  solar:[
+    M('According to Genesis 1, how did the solar system begin?',['God spoke and it was created','Rocks and gases by chance'],0),
+    P('What is in the <b>center</b> of the solar system?',[{emoji:'☀️',t:'The Sun'},{emoji:'🌍',t:'The Earth'}],0),
+    M('How many <b>planets</b> are in our solar system?',['8','5','3'],0),
+    M('Earth is which planet from the Sun?',['3rd','1st','5th'],0),
+    M('<b>Earth’s shape</b> is a…',['sphere','square'],0),
+    M('Earth’s rotation gives us sunrise, daytime, sunset, and ___.',['nighttime','seasons'],0)
+  ],
+  daynight:[
+    M('When a toy top <b>rotates</b>, it ___.',['spins','slides'],0),
+    M('Daytime and nighttime are caused by the ___ of the earth.',['rotation','revolution'],0),
+    M('The time it takes the earth to <b>rotate one time</b> is called a ___.',['day','year'],0),
+    M('An imaginary line running through the <b>center</b> of the earth is the ___.',['axis','equator'],0),
+    P('Which side of Earth has <b>DAYTIME</b>?',[{emoji:'🏠☀️',t:'Facing the Sun'},{emoji:'🏠🌙',t:'Turned away'}],0)
+  ],
+  seasons:[
+    M('When the earth <b>moves around the Sun</b>, it is called a ___.',['revolution','rotation'],0),
+    M('The earth makes one revolution around the Sun every ___.',['365 days','24 hours'],0),
+    M('The parts that get more sunlight change as the earth ___ around the Sun.',['revolves','rotates'],0),
+    P('Tilted <b>TOWARD</b> the Sun = more direct sunlight =',[{emoji:'☀️',t:'Summer'},{emoji:'❄️',t:'Winter'}],0),
+    P('Tilted <b>AWAY</b> from the Sun = less direct sunlight =',[{emoji:'❄️',t:'Winter'},{emoji:'☀️',t:'Summer'}],0),
+    M('An <b>orbit</b> is the earth’s ___ around the Sun.',['revolution','rotation'],0),
+    M('What <b>two things</b> cause the seasons?',['Revolution + tilt','Rotation + clouds'],0)
+  ],
+  layers:[
+    M('The <b>thinnest</b> layer, made of solid rock, is the ___.',['crust','core'],0),
+    M('The layer made of <b>melted</b> rock is the ___.',['mantle','crust'],0),
+    M('The layer at the <b>center</b> is the ___.',['core','crust'],0),
+    P('Which layer is the <b>OUTSIDE</b> (thinnest)?',[{emoji:'🟢',t:'Crust'},{emoji:'🔴',t:'Core'}],0),
+    P('Which layer is at the <b>CENTER</b>?',[{emoji:'🔴',t:'Core'},{emoji:'🟢',t:'Crust'}],0)
+  ],
+  waterland:[
+    M('Most of the earth’s surface is covered by ___.',['water','sand'],0),
+    M('The largest areas of land are the ___.',['continents','islands'],0),
+    M('TRUE or FALSE: Large bodies of <u>fresh</u> water are called oceans.',['False — it is SALT water','True'],0),
+    M('TRUE or FALSE: Rivers are filled with <u>salt</u> water.',['False — it is FRESH water','True'],0),
+    M('TRUE or FALSE: A huge, solid sheet of moving fresh water is a glacier.',['True','False'],0),
+    M('TRUE or FALSE: An island is a landform surrounded by water.',['True','False'],0),
+    M('TRUE or FALSE: Antarctica is covered with snow and ice.',['True','False'],0)
+  ],
+  continents:[
+    M('How many continents are there?',['7','5','10'],0),
+    M('The largest areas of land are called the ___.',['continents','oceans'],0),
+    M('Which is the <b>largest</b> continent?',['Asia','Australia','Europe'],0),
+    M('Which continent do we live on?',['North America','Africa','Asia'],0),
+    M('Which continent is covered in ice at the bottom of the map?',['Antarctica','Australia'],0)
+  ],
+  geologists:[
+    M('A geologist studies the earth’s ___.',['rocks and crust','stars'],0),
+    M('Which is a way geologists study the crust?',['Study caves','Open the earth to see inside'],0),
+    M('Which is <b>NOT</b> a real way to study the crust?',['Open the earth to see the mantle and core','Dig holes'],0),
+    M('Geologists study rocks and how they ___.',['form','cook'],0)
+  ]
+};
+
+var GOOD=['Brilliant! 🌟','You got it! 🎉','Super smart! 🚀','Yes! ⭐','Great thinking! 💡','Nailed it! 👏'];
+var TRY=['Almost — look again 👀','Good try — think it through 🤔','So close! Try once more 💪','Not quite — you can do it!'];
+function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
+
+/* ===== NAV ===== */
+function renderGradeNav(){ var gs=['K','1','2','3','4','5'],h='';
+  for(var i=0;i<gs.length;i++){ if(gs[i]==='2')h+='<div class="pill sel">Grade 2</div>';
+    else h+='<div class="pill lock">'+(gs[i]==='K'?'K':'G'+gs[i])+' <small>🔒</small></div>'; }
+  EL('gradenav').innerHTML=h;
+}
+function renderTopicNav(){ var h='';
+  for(var i=0;i<TOPIC_ORDER.length;i++){ var k=TOPIC_ORDER[i];
+    h+='<div class="pill'+(k===S.topic?' sel':'')+'" onclick="setTopic(\''+k+'\')">'+TOPICS[k].name+'</div>'; }
+  EL('topicnav').innerHTML=h;
+}
+function setTopic(k){ if(!TOPICS[k])return; S.topic=k; S.step=0; S.mode='learn'; play=null; render(); renderTopicNav(); }
+function setMode(m){ S.mode=m; S.step=0; if(m==='play')startPlay(); render(); }
+function syncModeBtns(){ EL('mLearn').className='mbtn'+(S.mode==='learn'?' sel':''); EL('mPlay').className='mbtn'+(S.mode==='play'?' sel':''); }
+
+/* ===== LEARN ===== */
+function render(){ clearAnim(); if(S.mode==='play')renderPlay(); else renderLearn(); syncModeBtns(); }
+function renderLearn(){ var T=TOPICS[S.topic], frames=T.frames(), f=frames[S.step], last=S.step>=frames.length-1;
+  var sceneFn=f.scene||T.scene, sceneHtml=sceneFn();
+  var isSvg=sceneHtml.indexOf('<svg')===0;
+  var h='<div class="card">'+(isSvg?'<div class="scenewrap">'+sceneHtml+'</div>':sceneHtml)+
+    '<div class="cap"><div class="cmain">'+f.main+'</div><div class="why">💡 '+f.why+'</div></div>'+
+    '<div class="navrow">'+(S.step>0?'<button class="btn ghost" onclick="learnStep(-1)">◂</button>':'')+
+      (last?'<button class="btn" onclick="setMode(\'play\')">Test yourself → 🎮</button>':'<button class="btn" onclick="learnStep(1)">Next ▸</button>')+
+    '</div><div class="scorebar">Step '+(S.step+1)+' of '+frames.length+' · '+T.tag+'</div></div>';
+  EL('panel').innerHTML=h;
+  if(f.run)f.run(); else if(T.run)T.run();
+  _cur=f.main+'. '+f.why; speak(_cur);
+}
+function learnStep(d){ var max=TOPICS[S.topic].frames().length-1,n=S.step+d; S.step=n<0?0:(n>max?max:n); render(); }
+
+/* ===== PLAY ===== */
+var play=null;
+function startPlay(){ play={ qs:QS[S.topic], i:0, pts:0, answered:false }; }
+function renderPlay(){ if(!play)startPlay();
+  if(play.i>=play.qs.length)return renderResult();
+  var q=play.qs[play.i], T=TOPICS[S.topic], prog=Math.round(play.i/play.qs.length*100), o='';
+  if(q.type==='pick'){ o='<div class="opts pick">';
+    for(var i=0;i<q.opts.length;i++)o+='<div class="opt pickcard" id="o'+i+'" onclick="answer('+i+')"><span class="emoji">'+q.opts[i].emoji+'</span><span>'+q.opts[i].t+'</span></div>';
+    o+='</div>';
+  } else { o='<div class="opts">';
+    for(var j=0;j<q.opts.length;j++)o+='<div class="opt" id="o'+j+'" onclick="answer('+j+')">'+q.opts[j]+'</div>';
+    o+='</div>'; }
+  EL('panel').innerHTML='<div class="card"><div class="progress"><i style="width:'+prog+'%"></i></div>'+
+    '<div class="q">'+q.q+'</div>'+o+'<div class="feed" id="feed"></div>'+
+    '<div class="scorebar">⭐ '+play.pts+' / '+play.qs.length+' · '+T.name+'</div></div>';
+  play.answered=false; _cur=q.q; speak(_cur);
+}
+function answer(i){ if(play.answered)return; var q=play.qs[play.i], feed=EL('feed');
+  if(i===q.correct){ play.answered=true; play.pts++; EL('o'+i).className+=' correct';
+    feed.className='feed good'; feed.textContent=pick(GOOD); speak(feed.textContent); setTimeout(nextQ,1100);
+  } else { EL('o'+i).className+=' wrong'; feed.className='feed bad'; feed.textContent=pick(TRY); speak(feed.textContent); }
+}
+function nextQ(){ play.i++; renderPlay(); }
+function renderResult(){ var r=play.pts/play.qs.length, stars=r>=1?'⭐⭐⭐':r>=.6?'⭐⭐':r>0?'⭐':'💫',
+   msg=r>=1?'Perfect! You’re a Science Star! 🌟':r>=.6?'Great job! 🚀':'Good start — try again! 💪';
+  EL('panel').innerHTML='<div class="card result"><div class="stars">'+stars+'</div><div class="big">'+play.pts+' / '+play.qs.length+'</div>'+
+    '<div class="why" style="color:var(--gold)">'+msg+'</div><div class="navrow"><button class="btn" onclick="setMode(\'play\')">Play again 🔁</button>'+
+    '<button class="btn sec" onclick="setMode(\'learn\')">◂ Back to Learn</button></div><div class="badge">'+TOPICS[S.topic].name+'</div></div>';
+  speak(msg);
+}
+
+/* ===== BOOT ===== */
+renderGradeNav(); renderTopicNav(); render();
+</script>
+</body>
+</html>
