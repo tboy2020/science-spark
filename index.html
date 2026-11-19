@@ -102,7 +102,7 @@ svg.scene{display:block;width:100%;height:auto}
     <div class="sub" id="subhdr">Grade 2 · Earth &amp; Space</div>
   </header>
   <div class="pills" id="gradenav"></div>
-  <div class="gradehint">Tap a grade — Kindergarten &amp; Grade 2 are ready to explore! 🚀</div>
+  <div class="gradehint">Tap a grade to explore — more are on the way! 🚀</div>
   <div class="pills" id="topicnav"></div>
   <div class="moderow">
     <button class="mbtn" id="mLearn" onclick="setMode('learn')">📘 Learn</button>
@@ -514,10 +514,114 @@ var QS_K={
     P('The sky is <b>dark</b>. Is it day or night?',[{emoji:'🌙',t:'Night'},{emoji:'☀️',t:'Day'}],0)
   ]
 };
+/* ===== GRADE 1 (Grade 1 · God's World) ===== */
+function matterScene(hi){ hi=hi||'';
+  function bx(x,lbl,on){ return '<rect x="'+x+'" y="30" width="80" height="94" rx="10" fill="#0e1f3a" stroke="'+(on?'var(--gold)':'#2a4a7a')+'" stroke-width="'+(on?3:1.5)+'"/><text x="'+(x+40)+'" y="146" text-anchor="middle" font-size="13" font-weight="800" fill="'+(on?'var(--gold)':'#eaf1ff')+'">'+lbl+'</text>'; }
+  var o='<svg viewBox="0 0 300 160" class="scene">';
+  o+=bx(16,'SOLID',hi==='solid')+'<rect x="36" y="64" width="40" height="40" rx="5" fill="#7fc4ff"/>';
+  o+=bx(110,'LIQUID',hi==='liquid')+'<path d="M118 92 q10 -6 20 0 t20 0 t20 0 v30 h-60 z" fill="#56b4ff"/>';
+  o+=bx(204,'GAS',hi==='gas');
+  var gx=[218,250,232,266,224,256],gy=[52,60,82,92,106,72],d='';
+  for(var i=0;i<gx.length;i++)d+='<circle cx="'+gx[i]+'" cy="'+gy[i]+'" r="5" fill="#a9c7ff" opacity=".9"/>';
+  return o+d+'</svg>';
+}
+var TOPICS_1={
+  matter:{ name:'🧪 Matter', tag:'Solid·Liquid·Gas', scene:function(){return matterScene('');}, frames:function(){return[
+    {scene:function(){return matterScene('');}, main:'Everything is made of <b>matter</b>. It takes up space.', why:'There are <b>3 kinds</b>: solid, liquid, and gas.'},
+    {scene:function(){return matterScene('solid');}, main:'A <b>SOLID</b> keeps its own shape. 🧊🧸', why:'A block, ice, or a toy stays the same shape.'},
+    {scene:function(){return matterScene('liquid');}, main:'A <b>LIQUID</b> flows and fills its cup. 💧', why:'Water, milk, and juice pour and take the shape of the container.'},
+    {scene:function(){return matterScene('gas');}, main:'A <b>GAS</b> spreads to fill all the space. 🎈', why:'Air fills a balloon. You often cannot see a gas. Now test yourself →'}
+  ];} },
+  sound:{ name:'🔊 Sound', tag:'Sound', scene:function(){return kRow([{e:'🎸',t:'guitar'},{e:'🥁',t:'drum'},{e:'🔔',t:'bell'},{e:'👂',t:'ears'}]);}, frames:function(){return[
+    {scene:function(){return kRow([{e:'🎸',t:'pluck'},{e:'〰️',t:'vibrate'},{e:'🔊',t:'sound'}]);}, main:'<b>Sound</b> is made when something <b>vibrates</b> (shakes fast).', why:'Pluck a guitar string — it shakes and makes a sound.'},
+    {scene:function(){return kRow([{e:'🔊',t:'sound'},{e:'➡️',t:'travels'},{e:'👂',t:'ear'}]);}, main:'Sound travels to your <b>ears</b>. 👂', why:'That is how you hear it.'},
+    {scene:function(){return kRow([{e:'📢',t:'LOUD'},{e:'🤫',t:'soft'}]);}, main:'Sounds can be <b>loud</b> or <b>soft</b>.', why:'A drum is loud; a whisper is soft. (High like a bird 🐦, or low like a big drum.) Now test yourself →'}
+  ];} },
+  forces:{ name:'🧲 Push, Pull & Magnets', tag:'Forces', scene:function(){return kRow([{e:'👐',t:'push'},{e:'🫳',t:'pull'},{e:'⬇️',t:'gravity'},{e:'🧲',t:'magnet'}]);}, frames:function(){return[
+    {scene:function(){return kRow([{e:'👐',t:'push away'},{e:'🫳',t:'pull closer'}]);}, main:'To move something, you can <b>push</b> or <b>pull</b> it.', why:'A push moves it away; a pull brings it closer.'},
+    {scene:function(){return kRow([{e:'🍎',t:'drop it'},{e:'⬇️',t:'falls down'}]);}, main:'<b>Gravity</b> pulls everything <b>down</b>. ⬇️', why:'Drop a ball and it falls down, not up. God made gravity to hold us on the ground.'},
+    {scene:function(){return kRow([{e:'🧲',t:'magnet'},{e:'📎',t:'metal sticks'},{e:'🪵',t:'wood: no'}]);}, main:'A <b>magnet</b> pulls some <b>metal</b> things to it.', why:'Magnets grab paper clips and nails — but NOT wood, paper, or plastic. Now test yourself →'}
+  ];} },
+  animalgroups:{ name:'🐾 Animal Groups', tag:'Animal groups', scene:function(){return kRow([{e:'🐶',t:'mammal'},{e:'🐦',t:'bird'},{e:'🐟',t:'fish'},{e:'🦎',t:'reptile'},{e:'🐝',t:'insect'}]);}, frames:function(){return[
+    {scene:function(){return kRow([{e:'🐶',t:'mammal'},{e:'🐦',t:'bird'},{e:'🐟',t:'fish'},{e:'🦎',t:'reptile'},{e:'🐝',t:'insect'}]);}, main:'Animals can be sorted into <b>groups</b>.', why:'Mammals, birds, fish, reptiles, and insects.'},
+    {scene:function(){return kRow([{e:'🐶',t:'dog'},{e:'🐱',t:'cat'},{e:'🐴',t:'horse'},{e:'🧒',t:'you!'}]);}, main:'<b>Mammals</b> have fur or hair and feed milk to babies.', why:'Dogs, cats, cows — and YOU are a mammal too!'},
+    {scene:function(){return kRow([{e:'🐦',t:'feathers'},{e:'🐟',t:'fins'}]);}, main:'<b>Birds</b> have feathers & wings. <b>Fish</b> have fins & live in water.', why:'Birds fly; fish swim.'},
+    {scene:function(){return kRow([{e:'🦎',t:'scales'},{e:'🐜',t:'6 legs'}]);}, main:'<b>Reptiles</b> have dry scales 🦎. <b>Insects</b> have <b>6 legs</b> 🐜.', why:'Snakes & lizards are reptiles; ants & bees are insects. Now test yourself →'}
+  ];} },
+  lifecycle:{ name:'🌱 Plant Life Cycle', tag:'Life cycle', scene:function(){return kRow([{e:'🌰',t:'seed'},{e:'🌱',t:'sprout'},{e:'🌻',t:'flower'},{e:'🌰',t:'seeds'}]);}, frames:function(){return[
+    {scene:function(){return kRow([{e:'🌰',t:'seed'},{e:'🌱',t:'sprout'},{e:'🌿',t:'plant'},{e:'🌻',t:'flower'}]);}, main:'A plant grows in <b>stages</b> — a <b>life cycle</b>.', why:'Seed → sprout → plant → flower → new seeds.'},
+    {scene:function(){return kRow([{e:'🌰',t:'seed'},{e:'💧',t:'water'},{e:'☀️',t:'sun'},{e:'🌱',t:'sprout'}]);}, main:'First a <b>seed</b> is planted. With sun & water it <b>sprouts</b>. 🌱', why:'A tiny root grows down and a stem grows up.'},
+    {scene:function(){return plantScene('leaves');}, main:'It grows <b>leaves</b> and a <b>flower</b>. 🌻', why:'The flower makes new seeds.'},
+    {scene:function(){return kRow([{e:'🌻',t:'flower'},{e:'🌰',t:'new seeds'},{e:'🔁',t:'again!'}]);}, main:'New seeds fall and grow again — the <b>cycle repeats</b>!', why:'Round and round, year after year. Now test yourself →'}
+  ];} },
+  sky:{ name:'☀️ Sun, Moon & Stars', tag:'The sky', scene:function(){return daynightScene('both');}, frames:function(){return[
+    {scene:function(){return daynightScene('day');}, main:'The <b>Sun</b> is a giant <b>star</b>. It gives us <b>light</b> and <b>heat</b>. ☀️', why:'God made the sun to light the day and keep us warm.'},
+    {scene:function(){return daynightScene('night');}, main:'At night we see the <b>Moon</b> 🌙 and <b>stars</b> ⭐.', why:'The moon has no light of its own — it reflects the sun’s light.'},
+    {scene:function(){return daynightScene('both');}, main:'Stars are <b>huge</b> but <b>far away</b>, so they look like tiny dots. ⭐', why:'The sun looks big because it is the closest star. Now test yourself →'}
+  ];} },
+  weather1:{ name:'🌦️ Weather & Seasons', tag:'Weather', scene:function(){return kRow([{e:'☀️',t:'sunny'},{e:'🌧️',t:'rainy'},{e:'☁️',t:'cloudy'},{e:'❄️',t:'snowy'}]);}, frames:function(){return[
+    {scene:function(){return kRow([{e:'☀️',t:'sunny'},{e:'🌧️',t:'rainy'},{e:'☁️',t:'cloudy'},{e:'🌬️',t:'windy'}]);}, main:'<b>Weather</b> changes day to day.', why:'Sunny, rainy, cloudy, snowy, or windy — we check it to know what to wear.'},
+    {scene:function(){return kRow([{e:'☁️',t:'cloud'},{e:'🌧️',t:'rain'}]);}, main:'<b>Rain</b> comes from <b>clouds</b>. ☁️ → 🌧️', why:'Water rises to the sky, makes clouds, then falls as rain.'},
+    {scene:function(){return kRow([{e:'🌷',t:'Spring'},{e:'☀️',t:'Summer'},{e:'🍂',t:'Fall'},{e:'❄️',t:'Winter'}]);}, main:'The <b>4 seasons</b> change all year.', why:'Spring (plants grow), Summer (hot), Fall (leaves fall), Winter (cold). Now test yourself →'}
+  ];} }
+};
+var ORDER_1=['matter','sound','forces','animalgroups','lifecycle','sky','weather1'];
+var QS_1={
+  matter:[
+    P('Which one is a <b>SOLID</b>?',[{emoji:'🧊',t:'Ice cube'},{emoji:'💧',t:'Water'}],0),
+    P('Which one is a <b>LIQUID</b>?',[{emoji:'🥤',t:'Juice'},{emoji:'🧱',t:'Brick'}],0),
+    M('A <b>gas</b> like air…',['spreads to fill the space','keeps its shape'],0),
+    M('A <b>solid</b>…',['keeps its shape','pours like water'],0),
+    M('How many kinds of matter are there?',['3','5','1'],0)
+  ],
+  sound:[
+    M('Sound is made when something ___.',['vibrates (shakes)','freezes'],0),
+    P('You <b>hear</b> sound with your…',[{emoji:'👂',t:'Ears'},{emoji:'👀',t:'Eyes'}],0),
+    P('Which is <b>LOUD</b>? 📢',[{emoji:'🥁',t:'Drum'},{emoji:'🤫',t:'Whisper'}],0),
+    M('A tiny whisper is a ___ sound.',['soft','loud'],0),
+    M('A guitar string makes sound when it…',['shakes fast','gets cold'],0)
+  ],
+  forces:[
+    M('You move a wagon toward you with a ___.',['pull','push'],0),
+    M('Gravity pulls things ___.',['down','up'],0),
+    P('A magnet sticks to…',[{emoji:'📎',t:'Paper clip'},{emoji:'🪵',t:'Wood'}],0),
+    P('Which does a magnet <b>NOT</b> pick up?',[{emoji:'🧸',t:'Plastic toy'},{emoji:'🔩',t:'Metal screw'}],0),
+    M('A <b>push</b> moves something…',['away from you','toward you'],0)
+  ],
+  animalgroups:[
+    P('Which is a <b>MAMMAL</b> (fur, drinks milk)?',[{emoji:'🐶',t:'Dog'},{emoji:'🐟',t:'Fish'}],0),
+    P('Which animal has <b>feathers</b>?',[{emoji:'🐦',t:'Bird'},{emoji:'🐍',t:'Snake'}],0),
+    P('Which lives in water and has <b>fins</b>?',[{emoji:'🐟',t:'Fish'},{emoji:'🐱',t:'Cat'}],0),
+    M('Insects have how many legs?',['6','4','2'],0),
+    P('A snake is a…',[{emoji:'🦎',t:'Reptile'},{emoji:'🐦',t:'Bird'}],0)
+  ],
+  lifecycle:[
+    M('What comes <b>first</b> in a plant’s life?',['seed','flower'],0),
+    M('A seed needs sun and ___ to sprout.',['water','sand'],0),
+    M('Which part makes <b>new seeds</b>?',['the flower','the roots'],0),
+    P('seed → ___ → flower. What is missing?',[{emoji:'🌱',t:'Sprout'},{emoji:'🍂',t:'Dead leaf'}],0),
+    M('After the flower makes seeds, the cycle…',['starts again','stops forever'],0)
+  ],
+  sky:[
+    M('The sun is a giant ___.',['star','planet'],0),
+    M('The sun gives us light and ___.',['heat','rain'],0),
+    P('What do we see at <b>night</b>?',[{emoji:'🌙',t:'Moon & stars'},{emoji:'☀️',t:'Sun'}],0),
+    M('Stars look tiny because they are…',['very far away','very small'],0),
+    M('The moon’s light really comes from the ___.',['sun','clouds'],0)
+  ],
+  weather1:[
+    M('How many seasons are there?',['4','7','2'],0),
+    M('Rain falls from ___.',['clouds','the ground'],0),
+    P('Which season is <b>hot</b>? ☀️',[{emoji:'☀️',t:'Summer'},{emoji:'❄️',t:'Winter'}],0),
+    P('Leaves fall from trees in ___. 🍂',[{emoji:'🍂',t:'Fall'},{emoji:'🌷',t:'Spring'}],0),
+    M('In winter it is usually ___.',['cold','hot'],0)
+  ]
+};
 /* ===== GRADE REGISTRY ===== */
 var TOPICS, QS, TOPIC_ORDER;
 var GRADES={
   'K':{ label:'Kindergarten · God’s World', topics:TOPICS_K, qs:QS_K, order:ORDER_K },
+  '1':{ label:'Grade 1 · God’s World', topics:TOPICS_1, qs:QS_1, order:ORDER_1 },
   '2':{ label:'Grade 2 · Earth & Space', topics:TOPICS_2, qs:QS_2, order:ORDER_2 }
 };
 
