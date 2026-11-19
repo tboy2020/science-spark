@@ -41,6 +41,12 @@ header{text-align:center;margin:6px 0 10px}
 .mbtn.sel{background:var(--blue);color:#021226;border-color:var(--blue)}
 .iconbtn{width:42px;height:42px;border-radius:12px;background:var(--card2);border:1px solid var(--line);
   color:var(--ink);font-size:1.15rem;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.mbtn.lock{opacity:.45;cursor:not-allowed}
+.testbtn{display:block;width:100%;margin:10px 0 0;background:linear-gradient(90deg,#7b5cff,#ff7bb0);color:#fff;border:none;border-radius:13px;padding:13px;font-size:1rem;font-weight:800;cursor:pointer}
+.testbtn.sel{outline:2px solid #fff;outline-offset:2px}
+.testbtn.lock{background:var(--card2);color:var(--dim);border:1px solid var(--line);cursor:not-allowed}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(18px);background:#1b3560;border:1px solid var(--line);color:var(--ink);padding:11px 16px;border-radius:12px;font-weight:700;font-size:.9rem;opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:90%;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px;margin-top:10px;box-shadow:0 10px 30px rgba(0,0,0,.25)}
 .scenewrap{background:radial-gradient(120% 120% at 50% 20%,#0c1b3e,#060c22);
   border:1px solid var(--line);border-radius:16px;padding:6px;overflow:hidden}
@@ -97,8 +103,10 @@ svg.scene{display:block;width:100%;height:auto}
   <div class="moderow">
     <button class="mbtn" id="mLearn" onclick="setMode('learn')">📘 Learn</button>
     <button class="mbtn" id="mPlay" onclick="setMode('play')">🎮 Play</button>
+    <button class="iconbtn" id="hearBtn" onclick="hearAgain()" title="Hear it again">🔁</button>
     <button class="iconbtn" id="sndBtn" onclick="toggleSound()" title="Read aloud">🔊</button>
   </div>
+  <button class="testbtn lock" id="testBtn" onclick="startTestMode()">🔒 Full Test</button>
   <div id="panel"></div>
 </div>
 <script>
@@ -120,11 +128,19 @@ function clean(h){ return (h||'').replace(/<[^>]*>/g,' ')
   .replace(/_+/g,' blank ').replace(/½/g,' and a half').replace(/→/g,' ')
   .replace(/[☀️🌙❄️🌷🍂⭐🏠🎉🌟🚀💡👀🤔💪🔆🌍🎮📘🌌🧱💧🗺️⛏️✨✝️🪨🕳️]/gu,' ')
   .replace(/\s+/g,' ').trim(); }
-function speak(h){ if(!soundOn)return; try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(clean(h));u.rate=.82;u.pitch=1.02;speechSynthesis.speak(u);}catch(e){} }
+function speak(h,force){ if(!soundOn&&!force)return; try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(clean(h));u.rate=.72;u.pitch=1.02;speechSynthesis.speak(u);}catch(e){} }
 var _cur=''; function speakCurrent(){ if(_cur)speak(_cur); }
+function hearAgain(){ if(_cur)speak(_cur,true); }
 
 /* ===== STATE ===== */
 var S={ grade:'2', topic:'solar', mode:'learn', step:0 };
+var PROG=(function(){ try{ var p=JSON.parse(localStorage.getItem('sspark_prog')||'{}'); return (p&&typeof p==='object')?p:{}; }catch(e){ return {}; } })();
+PROG.learn=PROG.learn||{}; PROG.play=PROG.play||{};
+function saveProg(){ try{ localStorage.setItem('sspark_prog',JSON.stringify(PROG)); }catch(e){} }
+function learnDone(k){ return !!(PROG.learn&&PROG.learn[k]); }
+function playDone(k){ return !!(PROG.play&&PROG.play[k]); }
+function allDone(){ for(var i=0;i<TOPIC_ORDER.length;i++){ if(!learnDone(TOPIC_ORDER[i])||!playDone(TOPIC_ORDER[i]))return false; } return true; }
+function doneCount(){ var n=0; for(var i=0;i<TOPIC_ORDER.length;i++){ if(learnDone(TOPIC_ORDER[i])&&playDone(TOPIC_ORDER[i]))n++; } return n; }
 var AF=null, rotT=0, revPhi=0;
 function clearAnim(){ if(AF){cancelAnimationFrame(AF);AF=null;} try{speechSynthesis.cancel();}catch(e){} }
 function EL(id){ return document.getElementById(id); }
@@ -394,17 +410,29 @@ function renderGradeNav(){ var gs=['K','1','2','3','4','5'],h='';
   EL('gradenav').innerHTML=h;
 }
 function renderTopicNav(){ var h='';
-  for(var i=0;i<TOPIC_ORDER.length;i++){ var k=TOPIC_ORDER[i];
-    h+='<div class="pill'+(k===S.topic?' sel':'')+'" onclick="setTopic(\''+k+'\')">'+TOPICS[k].name+'</div>'; }
+  for(var i=0;i<TOPIC_ORDER.length;i++){ var k=TOPIC_ORDER[i], done=learnDone(k)&&playDone(k);
+    h+='<div class="pill'+(k===S.topic?' sel':'')+'" onclick="setTopic(\''+k+'\')">'+TOPICS[k].name+(done?' ✓':'')+'</div>'; }
   EL('topicnav').innerHTML=h;
 }
 function setTopic(k){ if(!TOPICS[k])return; S.topic=k; S.step=0; S.mode='learn'; play=null; render(); renderTopicNav(); }
-function setMode(m){ S.mode=m; S.step=0; if(m==='play')startPlay(); render(); }
-function syncModeBtns(){ EL('mLearn').className='mbtn'+(S.mode==='learn'?' sel':''); EL('mPlay').className='mbtn'+(S.mode==='play'?' sel':''); }
+function setMode(m){ if(m==='play'&&!learnDone(S.topic)){ flashLock('📘 Finish the Learn first!'); return; } S.mode=m; S.step=0; if(m==='play')startPlay(); render(); }
+function backToLearn(){ S.mode='learn'; S.step=0; render(); }
+function startTest(){ var all=[]; for(var i=0;i<TOPIC_ORDER.length;i++)all=all.concat(QS[TOPIC_ORDER[i]]); play={ qs:all, i:0, pts:0, answered:false, found:[], test:true }; }
+function startTestMode(){ if(!allDone()){ flashLock('🔒 Finish every topic first ('+doneCount()+'/'+TOPIC_ORDER.length+')'); return; } S.mode='test'; S.step=0; startTest(); render(); }
+function flashLock(msg){ var t=EL('toast'); if(!t){ t=document.createElement('div'); t.id='toast'; document.body.appendChild(t); } t.className='toast show'; t.textContent=msg; clearTimeout(t._t); t._t=setTimeout(function(){ t.className='toast'; },1900); }
+function syncModeBtns(){
+  EL('mLearn').className='mbtn'+(S.mode==='learn'?' sel':'');
+  EL('mPlay').className='mbtn'+(S.mode==='play'?' sel':'')+(learnDone(S.topic)?'':' lock');
+  var tb=EL('testBtn'), ad=allDone();
+  tb.className='testbtn'+(ad?(S.mode==='test'?' sel':''):' lock');
+  tb.innerHTML=ad?'📝 Full Test — unlocked! ✅':'🔒 Full Test — finish all topics ('+doneCount()+'/'+TOPIC_ORDER.length+')';
+  renderTopicNav();
+}
 
 /* ===== LEARN ===== */
-function render(){ clearAnim(); if(S.mode==='play')renderPlay(); else renderLearn(); syncModeBtns(); }
+function render(){ clearAnim(); if(S.mode==='play'||S.mode==='test')renderPlay(); else renderLearn(); syncModeBtns(); }
 function renderLearn(){ var T=TOPICS[S.topic], frames=T.frames(), f=frames[S.step], last=S.step>=frames.length-1;
+  if(last&&!PROG.learn[S.topic]){ PROG.learn[S.topic]=true; saveProg(); }
   var sceneFn=f.scene||T.scene, sceneHtml=sceneFn();
   var isSvg=sceneHtml.indexOf('<svg')===0;
   var h='<div class="card">'+(isSvg?'<div class="scenewrap">'+sceneHtml+'</div>':sceneHtml)+
@@ -433,7 +461,7 @@ function renderPlay(){ if(!play)startPlay();
   var vis=q.vis?'<div class="scenewrap" style="margin:2px 0 12px">'+q.vis()+'</div>':'';
   EL('panel').innerHTML='<div class="card"><div class="progress"><i style="width:'+prog+'%"></i></div>'+
     vis+'<div class="q">'+q.q+'</div>'+o+'<div class="feed" id="feed"></div>'+
-    '<div class="scorebar">⭐ '+play.pts+' / '+play.qs.length+' · '+T.name+'</div></div>';
+    '<div class="scorebar">⭐ '+play.pts+' / '+play.qs.length+' · '+(play.test?'📝 Full Test':T.name)+'</div></div>';
   play.answered=false; play.found=[]; _cur=q.q; speak(_cur);
 }
 function answer(i){ if(play.answered)return; var q=play.qs[play.i], feed=EL('feed');
@@ -451,12 +479,20 @@ function answerMulti(i){ var q=play.qs[play.i], feed=EL('feed');
     setTimeout(function(){ var el=EL('o'+i); if(el&&el.className.indexOf('correct')<0)el.className='opt'; },750); }
 }
 function nextQ(){ play.i++; renderPlay(); }
-function renderResult(){ var r=play.pts/play.qs.length, stars=r>=1?'⭐⭐⭐':r>=.6?'⭐⭐':r>0?'⭐':'💫',
-   msg=r>=1?'Perfect! You’re a Science Star! 🌟':r>=.6?'Great job! 🚀':'Good start — try again! 💪';
+function renderResult(){ var r=play.pts/play.qs.length, stars=r>=1?'⭐⭐⭐':r>=.6?'⭐⭐':r>0?'⭐':'💫';
+  if(play.test){ var tp=Math.round(r*100);
+    EL('panel').innerHTML='<div class="card result"><div class="stars">'+stars+'</div><div class="big">'+play.pts+' / '+play.qs.length+'</div>'+
+      '<div class="why" style="color:var(--gold)">'+(r>=.8?'You’re ready for the test! 🎉':r>=.6?'Almost there — review and retake! 💪':'Keep studying — you’ve got this!')+'</div>'+
+      '<div class="navrow"><button class="btn" onclick="startTestMode()">Take it again 🔁</button><button class="btn sec" onclick="backToLearn()">◂ Topics</button></div>'+
+      '<div class="badge">📝 Full Test · '+tp+'%</div></div>';
+    speak('You scored '+play.pts+' out of '+play.qs.length); return;
+  }
+  PROG.play[S.topic]=true; saveProg();
+  var msg=r>=1?'Perfect! You’re a Science Star! 🌟':r>=.6?'Great job! 🚀':'Good start — try again! 💪';
   EL('panel').innerHTML='<div class="card result"><div class="stars">'+stars+'</div><div class="big">'+play.pts+' / '+play.qs.length+'</div>'+
     '<div class="why" style="color:var(--gold)">'+msg+'</div><div class="navrow"><button class="btn" onclick="setMode(\'play\')">Play again 🔁</button>'+
-    '<button class="btn sec" onclick="setMode(\'learn\')">◂ Back to Learn</button></div><div class="badge">'+TOPICS[S.topic].name+'</div></div>';
-  speak(msg);
+    '<button class="btn sec" onclick="setMode(\'learn\')">◂ Back to Learn</button></div><div class="badge">'+TOPICS[S.topic].name+' ✓</div></div>';
+  syncModeBtns(); speak(msg);
 }
 
 /* ===== BOOT ===== */
