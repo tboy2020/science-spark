@@ -244,23 +244,24 @@ function waterScene(){ var cx=120,cy=120,R=92;
 
 /* ---- CONTINENTS MAP ---- */
 var CONTS=[
-  {k:'na',name:'North America',lx:92,ly:62,d:'M42,44 Q60,28 95,32 L128,34 Q150,42 142,58 L150,66 Q140,76 150,84 L132,92 L120,84 L112,96 Q104,110 96,104 L92,88 L74,86 Q60,80 56,66 L44,60 Z'},
+  {k:'na',name:'North America',letter:'C',lx:92,ly:62,d:'M42,44 Q60,28 95,32 L128,34 Q150,42 142,58 L150,66 Q140,76 150,84 L132,92 L120,84 L112,96 Q104,110 96,104 L92,88 L74,86 Q60,80 56,66 L44,60 Z'},
   {k:'sa',name:'South America',lx:135,ly:160,d:'M118,120 L150,116 Q162,128 156,144 L148,168 Q140,192 128,200 Q122,186 128,168 L118,150 Q110,136 118,120 Z'},
   {k:'eu',name:'Europe',lx:232,ly:58,d:'M214,46 L242,40 Q254,48 246,58 L252,66 Q244,74 232,70 L224,74 Q216,66 222,58 L214,54 Z'},
   {k:'af',name:'Africa',lx:247,ly:128,d:'M224,88 L268,84 Q282,96 276,112 L266,132 Q258,156 246,176 Q238,184 232,172 Q236,146 228,128 Q218,112 222,98 Z'},
-  {k:'as',name:'Asia',lx:340,ly:70,d:'M256,58 Q270,42 305,36 L350,34 Q392,40 406,58 Q412,70 398,78 L410,88 Q396,98 378,92 L366,102 Q350,96 344,106 L326,98 L312,108 Q298,100 290,90 L272,94 Q258,82 260,70 Z'},
-  {k:'au',name:'Australia',lx:378,ly:172,d:'M352,158 Q375,150 398,158 Q412,168 404,182 Q388,192 366,186 Q350,180 348,168 Z'},
+  {k:'as',name:'Asia',letter:'A',lx:340,ly:70,d:'M256,58 Q270,42 305,36 L350,34 Q392,40 406,58 Q412,70 398,78 L410,88 Q396,98 378,92 L366,102 Q350,96 344,106 L326,98 L312,108 Q298,100 290,90 L272,94 Q258,82 260,70 Z'},
+  {k:'au',name:'Australia',letter:'B',lx:378,ly:172,d:'M352,158 Q375,150 398,158 Q412,168 404,182 Q388,192 366,186 Q350,180 348,168 Z'},
   {k:'an',name:'Antarctica',lx:222,ly:225,d:'M44,214 L400,214 Q410,222 402,230 L46,230 Q36,222 44,214 Z'}
 ];
 function contLabel(name,x,y){ var w=name.split(' ');
   if(w.length===2) return '<text x="'+x+'" y="'+y+'" text-anchor="middle" font-size="8.5" fill="#05240f" font-weight="800"><tspan x="'+x+'" dy="-3">'+w[0]+'</tspan><tspan x="'+x+'" dy="9">'+w[1]+'</tspan></text>';
   return '<text x="'+x+'" y="'+(y+3)+'" text-anchor="middle" font-size="9" fill="#05240f" font-weight="800">'+name+'</text>'; }
-function mapScene(hi,showNames){ hi=hi||'';
+function mapScene(hi,showNames,showLetters){ hi=hi||'';
   var out='<svg viewBox="0 0 440 244" class="scene"><rect width="440" height="244" fill="#0e2a4e"/>';
   for(var i=0;i<CONTS.length;i++){ var c=CONTS[i], on=(hi===c.k);
     out+='<path d="'+c.d+'" fill="'+(on?'var(--gold)':'#5bbd73')+'" stroke="'+(on?'#fff':'#2f7a49')+'" stroke-width="'+(on?2.5:1)+'"/>'; }
   if(showNames)for(var j=0;j<CONTS.length;j++){ var c2=CONTS[j]; out+=contLabel(c2.name,c2.lx,c2.ly); }
-  if(!showNames&&hi) out+='<text x="220" y="16" text-anchor="middle" font-size="13" fill="var(--gold)" font-weight="800">Which continent is gold?</text>';
+  if(showLetters)for(var m=0;m<CONTS.length;m++){ var c3=CONTS[m]; if(c3.letter) out+='<text x="'+c3.lx+'" y="'+(c3.ly+7)+'" text-anchor="middle" font-size="22" fill="#fff" font-weight="800" stroke="#05240f" stroke-width="0.9" paint-order="stroke">'+c3.letter+'</text>'; }
+  if(!showNames&&!showLetters&&hi) out+='<text x="220" y="16" text-anchor="middle" font-size="13" fill="var(--gold)" font-weight="800">Which continent is gold?</text>';
   return out+'</svg>';
 }
 
@@ -289,7 +290,7 @@ var TOPICS={
     {main:'<b>Rotation</b> gives us <b>day and night</b>.', why:'Daytime and nighttime are caused by the <b>rotation</b> of the earth — NOT revolution! Now test yourself →'}
   ];} },
   seasons:{ name:'🔆 Seasons', tag:'Revolution + Tilt', frames:function(){return[
-    {scene:revScene, run:revRun, main:'Earth <b>revolves</b> (moves) around the Sun.', why:'Moving around the Sun is <b>revolution</b>. An <b>orbit</b> is the earth’s revolution around the Sun.'},
+    {scene:revScene, run:revRun, main:'Earth <b>revolves</b> (moves) around the Sun.', why:'That movement is called <b>revolution</b>. The <b>path</b> it travels on is its <b>orbit</b>.'},
     {scene:revScene, run:revRun, main:'One revolution around the Sun = <b>365 days</b> = <b>one year</b>.', why:'Revolution takes a YEAR. (Spinning once = a day. Going around the Sun once = a year.)'},
     {scene:seaScene, run:function(){setSeason(0);}, main:'Earth is <b>tilted</b>. Tilted <b>TOWARD</b> the Sun → <b>SUMMER</b> ☀️.', why:'That part of the earth gets <b>more direct sunlight</b>.'},
     {scene:seaScene, run:function(){setSeason(2);}, main:'Tilted <b>AWAY</b> from the Sun → <b>WINTER</b> ❄️.', why:'That part gets <b>less direct sunlight</b>. The sunny parts change as the earth <b>revolves</b>.'},
@@ -311,7 +312,8 @@ var TOPICS={
     {scene:function(){return mapScene('',true);}, main:'There are <b>7 continents</b> — the largest areas of land.', why:'North America, South America, Europe, Asia, Africa, Australia, Antarctica.'},
     {scene:function(){return mapScene('na',true);}, main:'We live in <b>North America</b>.', why:'It is the gold one, up on the left.'},
     {scene:function(){return mapScene('as',true);}, main:'<b>Asia</b> is the biggest continent.', why:'It is the large one on the right.'},
-    {scene:function(){return mapScene('an',true);}, main:'<b>Antarctica</b> is at the bottom, covered in ice.', why:'Now match them on the map → test yourself!'}
+    {scene:function(){return mapScene('an',true);}, main:'<b>Antarctica</b> is at the bottom, covered in ice.', why:'It is the long strip across the bottom.'},
+    {scene:function(){return mapScene('',false,true);}, main:'On a map, continents can be marked with <b>letters</b>.', why:'On his test: <b>A = Asia</b>, <b>B = Australia</b>, <b>C = North America</b>. Match each one → test yourself!'}
   ];} },
   geologists:{ name:'⛏️ Geologists', tag:'Geologists', scene:geoScene, frames:function(){return[
     {main:'A <b>geologist</b> studies the earth’s <b>rocks and crust</b>.', why:'They learn about the earth’s crust.'},
@@ -347,7 +349,7 @@ var QS={
     M('The parts that get more sunlight change as the earth ___ around the Sun.',['revolves','rotates'],0),
     P('Tilted <b>TOWARD</b> the Sun = more direct sunlight =',[{emoji:'☀️',t:'Summer'},{emoji:'❄️',t:'Winter'}],0),
     P('Tilted <b>AWAY</b> from the Sun = less direct sunlight =',[{emoji:'❄️',t:'Winter'},{emoji:'☀️',t:'Summer'}],0),
-    M('An <b>orbit</b> is the earth’s ___ around the Sun.',['revolution','rotation'],0),
+    M('An <b>orbit</b> is the earth’s ___ around the Sun.',['path','revolution'],0),
     M('What <b>two things</b> cause the seasons?',['Revolution + tilt','Rotation + clouds'],0)
   ],
   layers:[
@@ -367,11 +369,11 @@ var QS={
     M('TRUE or FALSE: Antarctica is covered with snow and ice.',['True','False'],0)
   ],
   continents:[
+    {type:'mcq', vis:function(){return mapScene('as',false,true);}, q:'On the map, which continent is <b>A</b>?', opts:['Asia','Australia','North America'], correct:0},
+    {type:'mcq', vis:function(){return mapScene('au',false,true);}, q:'Which continent is <b>B</b>?', opts:['Australia','Asia','Africa'], correct:0},
+    {type:'mcq', vis:function(){return mapScene('na',false,true);}, q:'Which continent is <b>C</b>?', opts:['North America','South America','Europe'], correct:0},
     M('How many continents are there?',['7','5','10'],0),
-    M('The largest areas of land are called the ___.',['continents','oceans'],0),
-    M('Which is the <b>largest</b> continent?',['Asia','Australia','Europe'],0),
-    M('Which continent do we live on?',['North America','Africa','Asia'],0),
-    M('Which continent is covered in ice at the bottom of the map?',['Antarctica','Australia'],0)
+    M('Which is the <b>largest</b> continent?',['Asia','Australia','Europe'],0)
   ],
   geologists:[
     M('A geologist studies the earth’s ___.',['rocks and crust','stars'],0),
@@ -428,8 +430,9 @@ function renderPlay(){ if(!play)startPlay();
   } else { o='<div class="opts">';
     for(var j=0;j<q.opts.length;j++)o+='<div class="opt" id="o'+j+'" onclick="answer('+j+')">'+q.opts[j]+'</div>';
     o+='</div>'; }
+  var vis=q.vis?'<div class="scenewrap" style="margin:2px 0 12px">'+q.vis()+'</div>':'';
   EL('panel').innerHTML='<div class="card"><div class="progress"><i style="width:'+prog+'%"></i></div>'+
-    '<div class="q">'+q.q+'</div>'+o+'<div class="feed" id="feed"></div>'+
+    vis+'<div class="q">'+q.q+'</div>'+o+'<div class="feed" id="feed"></div>'+
     '<div class="scorebar">⭐ '+play.pts+' / '+play.qs.length+' · '+T.name+'</div></div>';
   play.answered=false; play.found=[]; _cur=q.q; speak(_cur);
 }
