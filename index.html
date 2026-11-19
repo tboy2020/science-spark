@@ -617,12 +617,123 @@ var QS_1={
     M('In winter it is usually ___.',['cold','hot'],0)
   ]
 };
+/* ===== GRADE 3 (Grade 3 · God's World) ===== */
+function cellScene(){
+  return '<svg viewBox="0 0 300 180" class="scene"><text x="252" y="40" font-size="30">🔬</text>'+
+   '<ellipse cx="140" cy="92" rx="100" ry="66" fill="#8fe0b0" stroke="#3bb36a" stroke-width="3"/>'+
+   '<circle cx="140" cy="92" r="28" fill="#ff9e3d" stroke="#d1721f" stroke-width="2"/>'+
+   '<text x="140" y="96" font-size="11" text-anchor="middle" fill="#5c3a00" font-weight="800">nucleus</text>'+
+   '<circle cx="92" cy="68" r="7" fill="#56b4ff"/><circle cx="196" cy="78" r="8" fill="#56b4ff"/><circle cx="100" cy="122" r="6" fill="#ff7bb0"/><circle cx="188" cy="124" r="7" fill="#ff7bb0"/>'+
+   '<text x="140" y="172" font-size="12" text-anchor="middle" fill="#9fb6dd">A cell — the building block of life</text></svg>';
+}
+function waterCycleScene(){
+  return '<svg viewBox="0 0 300 190" class="scene"><rect width="300" height="190" fill="#bfe6ff"/>'+
+   '<text x="34" y="46" font-size="32">☀️</text><text x="198" y="58" font-size="42">☁️</text>'+
+   '<rect x="0" y="152" width="300" height="38" fill="#2f7fd6"/>'+
+   '<text x="150" y="177" font-size="12" text-anchor="middle" fill="#dff0ff">ocean / lake</text>'+
+   '<path d="M70 152 C70 115 95 95 120 80" stroke="#0a4f91" stroke-width="3" fill="none"/>'+
+   '<text x="118" y="78" font-size="16">⬆️</text><text x="36" y="122" font-size="11" fill="#0a4f91" font-weight="700">evaporation</text>'+
+   '<text x="205" y="30" font-size="11" fill="#0a4f91" font-weight="700" text-anchor="middle">clouds</text>'+
+   '<text x="212" y="104" font-size="22">🌧️</text><text x="220" y="142" font-size="16">⬇️</text><text x="248" y="126" font-size="11" fill="#0a4f91" font-weight="700">rain</text></svg>';
+}
+var TOPICS_3={
+  cells:{ name:'🔬 Cells', tag:'Cells', scene:function(){return cellScene();}, frames:function(){return[
+    {scene:function(){return cellScene();}, main:'Every living thing is made of tiny <b>cells</b>. 🔬', why:'Cells are so small you need a <b>microscope</b> to see them.'},
+    {scene:function(){return cellScene();}, main:'Cells are the <b>building blocks</b> of life.', why:'Your body has trillions of cells. A plant is made of cells too.'},
+    {scene:function(){return cellScene();}, main:'A cell has a center called the <b>nucleus</b>.', why:'The nucleus is like the control center of the cell. Now test yourself →'}
+  ];} },
+  ecosystems:{ name:'🌍 Ecosystems', tag:'Food chains', scene:function(){return kRow([{e:'🌱',t:'plant'},{e:'➡️',t:''},{e:'🐛',t:'bug'},{e:'➡️',t:''},{e:'🐦',t:'bird'}]);}, frames:function(){return[
+    {scene:function(){return kRow([{e:'🌲',t:'plants'},{e:'🦌',t:'animals'},{e:'💧',t:'water'},{e:'🪨',t:'soil'}]);}, main:'An <b>ecosystem</b> is living things + their <b>home</b> (habitat).', why:'Plants, animals, water, soil, and air all work together.'},
+    {scene:function(){return kRow([{e:'☀️',t:''},{e:'➡️',t:''},{e:'🌱',t:'plant'},{e:'➡️',t:''},{e:'🐛',t:'bug'},{e:'➡️',t:''},{e:'🐦',t:'bird'}]);}, main:'A <b>food chain</b> shows who eats what.', why:'Energy passes from the sun, to a plant, to a bug, to a bird.'},
+    {scene:function(){return kRow([{e:'🌱',t:'producer'},{e:'🐰',t:'consumer'}]);}, main:'<b>Producers</b> (plants) make their own food. <b>Consumers</b> (animals) eat others.', why:'Plants use sunlight; animals eat plants or other animals.'},
+    {scene:function(){return kRow([{e:'🦊',t:'predator'},{e:'🐰',t:'prey'}]);}, main:'A <b>predator</b> hunts; the <b>prey</b> is hunted. 🦊🐰', why:'The fox is the predator; the rabbit is the prey. Now test yourself →'}
+  ];} },
+  energy:{ name:'⚡ Energy', tag:'Energy', scene:function(){return kRow([{e:'☀️',t:'light'},{e:'🔥',t:'heat'},{e:'🔊',t:'sound'},{e:'🏃',t:'motion'},{e:'💡',t:'electric'}]);}, frames:function(){return[
+    {scene:function(){return kRow([{e:'☀️',t:'light'},{e:'🔥',t:'heat'},{e:'🔊',t:'sound'},{e:'🏃',t:'motion'}]);}, main:'<b>Energy</b> makes things happen — light, heat, sound, and motion. ⚡', why:'Nothing moves or works without energy.'},
+    {scene:function(){return kRow([{e:'☀️',t:'the Sun'}]);}, main:'The <b>Sun</b> is our biggest source of energy. ☀️', why:'It gives light and heat to the whole earth.'},
+    {scene:function(){return kRow([{e:'🔋',t:''},{e:'➡️',t:''},{e:'💡',t:'light'}]);}, main:'<b>Electricity</b> powers lights and machines. 💡', why:'It flows through wires in a <b>circuit</b>. A bulb changes electricity into light and heat. Now test yourself →'}
+  ];} },
+  rocks:{ name:'🪨 Rocks & Fossils', tag:'Rocks·minerals·fossils', scene:function(){return kRow([{e:'🌋',t:'igneous'},{e:'🧱',t:'sediment.'},{e:'💎',t:'metamorphic'},{e:'🦴',t:'fossil'}]);}, frames:function(){return[
+    {scene:function(){return kRow([{e:'🪨',t:'rock'},{e:'💎',t:'minerals'}]);}, main:'<b>Rocks</b> are made of <b>minerals</b>. There are <b>3 kinds</b> of rock.', why:'Igneous, sedimentary, and metamorphic.'},
+    {scene:function(){return kRow([{e:'🌋',t:'igneous'},{e:'🧱',t:'sediment.'},{e:'💎',t:'metamorphic'}]);}, main:'<b>Igneous</b> forms from cooled lava 🌋. <b>Sedimentary</b> forms from pressed layers.', why:'<b>Metamorphic</b> rock is changed by heat & pressure.'},
+    {scene:function(){return kRow([{e:'🦕',t:'long ago'},{e:'➡️',t:''},{e:'🦴',t:'fossil'}]);}, main:'A <b>fossil</b> is the shape or remains of a living thing from long ago, saved in rock.', why:'Fossils usually form in <b>sedimentary</b> rock. Now test yourself →'}
+  ];} },
+  classify:{ name:'🐾 Animal Classes', tag:'Classification', scene:function(){return kRow([{e:'🦴',t:'backbone?'},{e:'🐶',t:'yes'},{e:'🐜',t:'no'}]);}, frames:function(){return[
+    {scene:function(){return kRow([{e:'🦴',t:'backbone?'}]);}, main:'Scientists sort animals by one big question: do they have a <b>backbone</b>?', why:'<b>Vertebrates</b> HAVE a backbone; <b>invertebrates</b> do NOT.'},
+    {scene:function(){return kRow([{e:'🐶',t:'mammal'},{e:'🐦',t:'bird'},{e:'🐟',t:'fish'},{e:'🦎',t:'reptile'},{e:'🐸',t:'amphibian'}]);}, main:'<b>Vertebrates</b> have a backbone: mammals, birds, fish, reptiles, amphibians.', why:'They all have a spine inside their body.'},
+    {scene:function(){return kRow([{e:'🐜',t:'insect'},{e:'🕷️',t:'spider'},{e:'🪱',t:'worm'},{e:'🪼',t:'jellyfish'}]);}, main:'<b>Invertebrates</b> have <b>NO backbone</b>: insects, spiders, worms, jellyfish.', why:'Most animals on earth are invertebrates! Now test yourself →'}
+  ];} },
+  body3:{ name:'🫀 Body Systems', tag:'Body systems', scene:function(){return kRow([{e:'🦴',t:'bones'},{e:'💪',t:'muscles'},{e:'❤️',t:'heart'},{e:'🫁',t:'lungs'},{e:'✋',t:'skin'}]);}, frames:function(){return[
+    {scene:function(){return kRow([{e:'🦴',t:'bones'},{e:'💪',t:'muscles'},{e:'❤️',t:'heart'},{e:'🫁',t:'lungs'}]);}, main:'Your body has <b>systems</b> that each do a job.', why:'Bones, muscles, heart, lungs, and skin all work together.'},
+    {scene:function(){return kRow([{e:'🦴',t:'skeleton'},{e:'💪',t:'muscles'}]);}, main:'The <b>skeleton</b> (bones) holds you up & protects. <b>Muscles</b> move you.', why:'Bones are the frame; muscles pull them to move.'},
+    {scene:function(){return kRow([{e:'❤️',t:'heart'},{e:'🫁',t:'lungs'}]);}, main:'The <b>heart</b> pumps blood ❤️. The <b>lungs</b> take in air 🫁.', why:'Blood carries food and air to every cell.'},
+    {scene:function(){return kRow([{e:'✋',t:'skin'}]);}, main:'<b>Skin</b> covers and protects you — your <b>biggest organ</b>!', why:'It keeps germs out and holds you together. Now test yourself →'}
+  ];} },
+  watercycle:{ name:'🌦️ Water Cycle', tag:'Weather & water', scene:function(){return waterCycleScene();}, frames:function(){return[
+    {scene:function(){return kRow([{e:'🌧️',t:'weather'},{e:'🗓️',t:'climate'}]);}, main:'<b>Weather</b> is day-to-day. <b>Climate</b> is the usual weather over a long time.', why:'A rainy day is weather; a desert being always dry is climate.'},
+    {scene:function(){return waterCycleScene();}, main:'The <b>water cycle</b> moves water around the earth. 🔁', why:'Sun heats water → it rises (<b>evaporation</b>) → forms clouds (<b>condensation</b>) → falls as rain (<b>precipitation</b>).'},
+    {scene:function(){return waterCycleScene();}, main:'Water collects in rivers, lakes & oceans — then it <b>repeats</b>. 🔁', why:'Round and round, the same water is used again and again. Now test yourself →'}
+  ];} }
+};
+var ORDER_3=['cells','ecosystems','energy','rocks','classify','body3','watercycle'];
+var QS_3={
+  cells:[
+    M('Living things are made of tiny ___.',['cells','rocks'],0),
+    M('To see a cell you need a ___.',['microscope','telescope'],0),
+    P('Which is made of cells?',[{emoji:'🌳',t:'Tree'},{emoji:'🪨',t:'Rock'}],0),
+    M('The control center of a cell is the ___.',['nucleus','engine'],0),
+    M('Your body has about how many cells?',['trillions (a LOT)','just ten'],0)
+  ],
+  ecosystems:[
+    M('An ecosystem is living things and their ___.',['home (habitat)','color'],0),
+    M('A food chain shows who ___ what.',['eats','paints'],0),
+    M('Plants that make their own food are ___.',['producers','consumers'],0),
+    P('In 🌱 → 🐛 → 🐦, what does the bird eat?',[{emoji:'🐛',t:'Caterpillar'},{emoji:'🌱',t:'Plant'}],0),
+    M('A fox that hunts a rabbit is the ___.',['predator','prey'],0)
+  ],
+  energy:[
+    M('Energy gives light, heat, sound, and ___.',['motion','dirt'],0),
+    M('Earth’s biggest source of energy is the ___.',['Sun','Moon'],0),
+    P('What powers a light bulb?',[{emoji:'💡',t:'Electricity'},{emoji:'🪨',t:'A rock'}],0),
+    M('Electricity flows through wires in a ___.',['circuit','cup'],0),
+    M('A bulb changes electricity into light and ___.',['heat','water'],0)
+  ],
+  rocks:[
+    M('Rocks are made of ___.',['minerals','water'],0),
+    M('How many main kinds of rock are there?',['3','10'],0),
+    M('Rock made from cooled lava is ___.',['igneous','sedimentary'],0),
+    P('A print of an old bone saved in rock is a ___.',[{emoji:'🦴',t:'Fossil'},{emoji:'🧊',t:'Ice cube'}],0),
+    M('Fossils are usually found in ___ rock.',['sedimentary','shiny metal'],0)
+  ],
+  classify:[
+    M('An animal WITH a backbone is a ___.',['vertebrate','invertebrate'],0),
+    P('Which has <b>NO</b> backbone?',[{emoji:'🐜',t:'Ant'},{emoji:'🐶',t:'Dog'}],0),
+    P('Which is a <b>vertebrate</b> (has a backbone)?',[{emoji:'🐟',t:'Fish'},{emoji:'🪱',t:'Worm'}],0),
+    M('Frogs (amphibians) are ___.',['vertebrates','rocks'],0),
+    M('Most animals on earth are ___.',['invertebrates','mammals'],0)
+  ],
+  body3:[
+    P('What holds your body up and protects it?',[{emoji:'🦴',t:'Bones'},{emoji:'🎈',t:'Air'}],0),
+    M('Muscles help you ___.',['move','see colors'],0),
+    P('What pumps blood around your body?',[{emoji:'❤️',t:'Heart'},{emoji:'👂',t:'Ear'}],0),
+    M('Your lungs take in ___.',['air','food'],0),
+    M('Your biggest organ, covering your body, is your ___.',['skin','toe'],0)
+  ],
+  watercycle:[
+    M('Day-to-day sun or rain is called ___.',['weather','climate'],0),
+    M('The usual weather over many years is ___.',['climate','a storm'],0),
+    M('The sun heats water and it rises as vapor — that is ___.',['evaporation','rain'],0),
+    P('Water droplets in the sky form ___.',[{emoji:'☁️',t:'Clouds'},{emoji:'🪨',t:'Rocks'}],0),
+    M('Rain, snow, and hail falling down are ___.',['precipitation','evaporation'],0)
+  ]
+};
 /* ===== GRADE REGISTRY ===== */
 var TOPICS, QS, TOPIC_ORDER;
 var GRADES={
   'K':{ label:'Kindergarten · God’s World', topics:TOPICS_K, qs:QS_K, order:ORDER_K },
   '1':{ label:'Grade 1 · God’s World', topics:TOPICS_1, qs:QS_1, order:ORDER_1 },
-  '2':{ label:'Grade 2 · Earth & Space', topics:TOPICS_2, qs:QS_2, order:ORDER_2 }
+  '2':{ label:'Grade 2 · Earth & Space', topics:TOPICS_2, qs:QS_2, order:ORDER_2 },
+  '3':{ label:'Grade 3 · God’s World', topics:TOPICS_3, qs:QS_3, order:ORDER_3 }
 };
 
 var GOOD=['Brilliant! 🌟','You got it! 🎉','Super smart! 🚀','Yes! ⭐','Great thinking! 💡','Nailed it! 👏'];
