@@ -92,6 +92,16 @@ svg.scene{display:block;width:100%;height:auto}
 .kitem{text-align:center;min-width:66px}
 .kitem .ke{font-size:3rem;line-height:1.1}
 .kitem .kt{font-size:.8rem;color:var(--dim);margin-top:2px}
+/* ===== WIDE SCREENS: use the horizontal space, less scrolling ===== */
+@media (min-width:860px){
+  #app{max-width:900px}
+  .learncard{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);column-gap:24px;align-items:center}
+  .learncard>:first-child{grid-column:1;grid-row:1 / span 3;min-width:0;align-self:center}
+  .learncard>.cap{grid-column:2;grid-row:1;text-align:left;margin-top:0}
+  .learncard>.navrow{grid-column:2;grid-row:2;margin-top:10px}
+  .learncard>.scorebar{grid-column:2;grid-row:3;text-align:left}
+  .playcard .opts{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 <body>
@@ -1021,7 +1031,7 @@ function renderLearn(){ var T=TOPICS[S.topic], frames=T.frames(), f=frames[S.ste
   if(last&&!gprog().learn[S.topic]){ gprog().learn[S.topic]=true; saveProg(); }
   var sceneFn=f.scene||T.scene, sceneHtml=sceneFn();
   var isSvg=sceneHtml.indexOf('<svg')===0;
-  var h='<div class="card">'+(isSvg?'<div class="scenewrap">'+sceneHtml+'</div>':sceneHtml)+
+  var h='<div class="card learncard">'+(isSvg?'<div class="scenewrap">'+sceneHtml+'</div>':sceneHtml)+
     '<div class="cap"><div class="cmain">'+f.main+'</div><div class="why">💡 '+f.why+'</div></div>'+
     '<div class="navrow">'+(S.step>0?'<button class="btn ghost" onclick="learnStep(-1)">◂</button>':'')+
       (last?'<button class="btn" onclick="setMode(\'play\')">Test yourself → 🎮</button>':'<button class="btn" onclick="learnStep(1)">Next ▸</button>')+
@@ -1045,7 +1055,7 @@ function renderPlay(){ if(!play)startPlay();
     for(var j=0;j<q.opts.length;j++)o+='<div class="opt" id="o'+j+'" onclick="answer('+j+')">'+q.opts[j]+'</div>';
     o+='</div>'; }
   var vis=q.vis?'<div class="scenewrap" style="margin:2px 0 12px">'+q.vis()+'</div>':'';
-  EL('panel').innerHTML='<div class="card"><div class="progress"><i style="width:'+prog+'%"></i></div>'+
+  EL('panel').innerHTML='<div class="card playcard"><div class="progress"><i style="width:'+prog+'%"></i></div>'+
     vis+'<div class="q">'+q.q+'</div>'+o+'<div class="feed" id="feed"></div>'+
     '<div class="scorebar">⭐ '+play.pts+' / '+play.qs.length+' · '+(play.test?'📝 Full Test':T.name)+'</div></div>';
   play.answered=false; play.found=[]; _cur=q.q; speak(_cur);
