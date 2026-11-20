@@ -727,13 +727,132 @@ var QS_3={
     M('Rain, snow, and hail falling down are ___.',['precipitation','evaporation'],0)
   ]
 };
+/* ===== GRADE 4 (Grade 4 · God's World) ===== */
+function lightScene(){
+  return '<svg viewBox="0 0 300 160" class="scene"><rect width="300" height="160" fill="#0b1b3a"/>'+
+   '<text x="28" y="46" font-size="30">☀️</text>'+
+   '<rect x="236" y="34" width="8" height="94" fill="#9fd4ff"/><text x="240" y="142" font-size="10" fill="#9fb6dd" text-anchor="middle">mirror</text>'+
+   '<line x1="58" y1="56" x2="238" y2="76" stroke="#ffd34d" stroke-width="3"/>'+
+   '<line x1="238" y1="76" x2="86" y2="120" stroke="#ffd34d" stroke-width="3"/>'+
+   '<text x="74" y="128" font-size="22">👁️</text>'+
+   '<text x="118" y="58" font-size="10" fill="#ffd34d">light →</text><text x="120" y="110" font-size="10" fill="#ffd34d">← reflects</text></svg>';
+}
+function circuitScene(){
+  return '<svg viewBox="0 0 300 170" class="scene">'+
+   '<rect x="50" y="44" width="200" height="86" fill="none" stroke="#f6c445" stroke-width="4"/>'+
+   '<circle cx="150" cy="44" r="26" fill="#ffcf4a" opacity=".22"/>'+
+   '<circle cx="150" cy="44" r="17" fill="#fff2b0" stroke="#ffcf4a" stroke-width="3"/><text x="150" y="50" font-size="17" text-anchor="middle">💡</text>'+
+   '<rect x="120" y="120" width="60" height="20" rx="3" fill="#13294f" stroke="#f6c445" stroke-width="2"/><text x="150" y="134" font-size="11" fill="#f6c445" text-anchor="middle">🔋 battery</text>'+
+   '<text x="150" y="160" font-size="11" fill="#9fb6dd" text-anchor="middle">A complete loop (circuit) lights the bulb</text></svg>';
+}
+function leverScene(){
+  return '<svg viewBox="0 0 300 150" class="scene">'+
+   '<line x1="60" y1="72" x2="250" y2="118" stroke="#c08040" stroke-width="7" stroke-linecap="round"/>'+
+   '<polygon points="150,96 132,138 168,138" fill="#9fb6dd"/>'+
+   '<text x="60" y="64" font-size="28" text-anchor="middle">🪨</text>'+
+   '<text x="250" y="110" font-size="24" text-anchor="middle">👇</text>'+
+   '<text x="150" y="28" font-size="12" fill="#9fb6dd" text-anchor="middle">A lever lifts a big load with less effort</text></svg>';
+}
+var TOPICS_4={
+  waves:{ name:'🌊 Light & Sound', tag:'Waves', scene:function(){return lightScene();}, frames:function(){return[
+    {scene:function(){return kRow([{e:'☀️',t:'light'},{e:'🌊',t:'waves'},{e:'🔊',t:'sound'}]);}, main:'<b>Light</b> and <b>sound</b> both travel in <b>waves</b>. 🌊', why:'A wave carries energy from one place to another.'},
+    {scene:function(){return lightScene();}, main:'Light travels straight and <b>reflects</b> (bounces). 🪞', why:'Light bounces off a mirror so we can see — that is reflection.'},
+    {scene:function(){return kRow([{e:'🌈',t:'prism'},{e:'🥤',t:'bent straw'}]);}, main:'Light <b>bends</b> through water or glass — <b>refraction</b>. 🌈', why:'A prism bends light into a rainbow; a straw looks bent in water.'},
+    {scene:function(){return kRow([{e:'🔊',t:'sound wave'},{e:'👂',t:'ear'}]);}, main:'<b>Sound</b> waves travel to your ears.', why:'Fast shakes = HIGH pitch; big waves = LOUD. Now test yourself →'}
+  ];} },
+  electricity:{ name:'⚡ Electricity', tag:'Circuits', scene:function(){return circuitScene();}, frames:function(){return[
+    {scene:function(){return circuitScene();}, main:'To light a bulb, electricity needs a complete <b>circuit</b>. 🔋💡', why:'A circuit is an unbroken loop: battery → wires → bulb → back.'},
+    {scene:function(){return kRow([{e:'🔌',t:'closed: ON'},{e:'✂️',t:'broken: OFF'}]);}, main:'If the loop is <b>broken</b>, the bulb goes <b>out</b>.', why:'A switch opens (breaks) or closes (completes) the circuit.'},
+    {scene:function(){return kRow([{e:'🔩',t:'metal: yes'},{e:'🧴',t:'rubber: no'}]);}, main:'<b>Conductors</b> (metal) let electricity flow. <b>Insulators</b> (rubber, plastic) stop it.', why:'Wires are metal inside with a rubber coat to keep us safe. Now test yourself →'}
+  ];} },
+  machines:{ name:'🚀 Motion & Machines', tag:'Forces & machines', scene:function(){return leverScene();}, frames:function(){return[
+    {scene:function(){return kRow([{e:'🏃',t:'motion'},{e:'⏱️',t:'speed'},{e:'👉',t:'force'}]);}, main:'<b>Motion</b> is moving. <b>Speed</b> is how fast. A <b>force</b> changes motion.', why:'A push or pull can start, stop, or turn something.'},
+    {scene:function(){return kRow([{e:'🧊',t:'smooth: far'},{e:'🌿',t:'rough: stops'}]);}, main:'<b>Friction</b> is a force that <b>slows</b> things when they rub.', why:'A ball rolls far on smooth ice but stops fast on rough grass.'},
+    {scene:function(){return kRow([{e:'⚖️',t:'lever'},{e:'🎡',t:'wheel'},{e:'⛓️',t:'pulley'},{e:'📐',t:'ramp'},{e:'🔪',t:'wedge'},{e:'🔩',t:'screw'}]);}, main:'<b>Simple machines</b> make work easier. There are <b>6</b>. 🛠️', why:'Lever, wheel & axle, pulley, ramp, wedge, screw.'},
+    {scene:function(){return leverScene();}, main:'A <b>lever</b> (like a seesaw) lifts a big load with <b>less effort</b>.', why:'A ramp helps too — pushing up a slope beats lifting straight up. Now test yourself →'}
+  ];} },
+  erosion:{ name:'🏔️ Weathering & Erosion', tag:'Earth’s surface', scene:function(){return kRow([{e:'🪨',t:'rock'},{e:'💧',t:'water'},{e:'💨',t:'wind'},{e:'🏜️',t:'canyon'}]);}, frames:function(){return[
+    {scene:function(){return kRow([{e:'🪨',t:'big rock'},{e:'➡️',t:''},{e:'🪨',t:'small bits'}]);}, main:'<b>Weathering</b> breaks rock into smaller pieces over time.', why:'Water, ice, and wind slowly wear rock down.'},
+    {scene:function(){return kRow([{e:'🌊',t:'water'},{e:'💨',t:'wind'},{e:'➡️',t:'carry away'}]);}, main:'<b>Erosion</b> carries the broken pieces <b>away</b>. 💨🌊', why:'Wind, rivers, and waves move the bits to new places.'},
+    {scene:function(){return kRow([{e:'🏞️',t:'river'},{e:'➡️',t:''},{e:'🏜️',t:'canyon'}]);}, main:'This slowly <b>reshapes the land</b> — canyons, beaches, valleys.', why:'The Grand Canyon was carved by a river over a very long time. Now test yourself →'}
+  ];} },
+  hazards:{ name:'🌋 Natural Hazards', tag:'Hazards & safety', scene:function(){return kRow([{e:'🌋',t:'volcano'},{e:'🌍',t:'earthquake'},{e:'🌊',t:'flood'},{e:'🌀',t:'storm'}]);}, frames:function(){return[
+    {scene:function(){return kRow([{e:'🌋',t:'volcano'},{e:'🌍',t:'quake'},{e:'🌊',t:'flood'},{e:'🌀',t:'storm'}]);}, main:'<b>Natural hazards</b> are powerful earth events.', why:'Volcanoes, earthquakes, floods, and storms can be dangerous.'},
+    {scene:function(){return kRow([{e:'🌋',t:'lava'},{e:'🌍',t:'shaking'}]);}, main:'A <b>volcano</b> erupts hot <b>lava</b>; an <b>earthquake</b> shakes the ground.', why:'Both come from forces deep inside the earth.'},
+    {scene:function(){return kRow([{e:'📋',t:'a plan'},{e:'📢',t:'warnings'},{e:'🏠',t:'safe place'}]);}, main:'<b>Stay safe:</b> have a plan, heed warnings, go to a safe place.', why:'In an earthquake: drop, cover, and hold on. Now test yourself →'}
+  ];} },
+  moon:{ name:'🌙 The Moon & Space', tag:'Moon phases', scene:function(){return kRow([{e:'🌑',t:'new'},{e:'🌓',t:'half'},{e:'🌕',t:'full'},{e:'🌗',t:'half'}]);}, frames:function(){return[
+    {scene:function(){return kRow([{e:'🌍',t:'Earth'},{e:'🌙',t:'Moon'}]);}, main:'The <b>Moon</b> circles the <b>Earth</b> — about once a month. 🌙', why:'The moon makes no light of its own; it reflects the sun’s light.'},
+    {scene:function(){return kRow([{e:'🌑',t:'new'},{e:'🌒',t:''},{e:'🌓',t:'half'},{e:'🌔',t:''},{e:'🌕',t:'full'}]);}, main:'The moon seems to change shape — these are <b>phases</b>.', why:'We see different amounts of the sunlit side as the moon moves.'},
+    {scene:function(){return kRow([{e:'🌕',t:'moon pull'},{e:'🌊',t:'tides'}]);}, main:'The moon’s pull causes <b>tides</b> — the sea rising & falling. 🌊', why:'Now test yourself →'}
+  ];} },
+  resources:{ name:'♻️ Natural Resources', tag:'Resources', scene:function(){return kRow([{e:'💧',t:'water'},{e:'🌳',t:'trees'},{e:'⛽',t:'oil'},{e:'♻️',t:'recycle'}]);}, frames:function(){return[
+    {scene:function(){return kRow([{e:'💧',t:'water'},{e:'🌳',t:'trees'},{e:'🪨',t:'metals'},{e:'⛽',t:'oil'}]);}, main:'<b>Natural resources</b> are things from the earth we use.', why:'Water, air, soil, trees, metals, oil. God gave us the earth to use wisely.'},
+    {scene:function(){return kRow([{e:'🌳',t:'trees'},{e:'🌞',t:'sun'},{e:'💨',t:'wind'}]);}, main:'<b>Renewable</b> resources can be replaced.', why:'Trees (replant), sunlight, wind, water — they will not run out if used well.'},
+    {scene:function(){return kRow([{e:'⛽',t:'oil'},{e:'🪨',t:'coal'},{e:'🔥',t:'gas'}]);}, main:'<b>Nonrenewable</b> resources run out: oil, coal, gas.', why:'They took millions of years to form — once used, they are gone.'},
+    {scene:function(){return kRow([{e:'♻️',t:'recycle'},{e:'🔁',t:'reuse'},{e:'💧',t:'save'}]);}, main:'<b>Conserve:</b> reduce, reuse, recycle — don’t waste.', why:'Caring for God’s creation. Now test yourself →'}
+  ];} }
+};
+var ORDER_4=['waves','electricity','machines','erosion','hazards','moon','resources'];
+var QS_4={
+  waves:[
+    M('Light and sound both travel in ___.',['waves','boxes'],0),
+    M('Light bouncing off a mirror is ___.',['reflection','erosion'],0),
+    M('Light bending through water or glass is ___.',['refraction','gravity'],0),
+    P('What bends light into a rainbow?',[{emoji:'🌈',t:'A prism'},{emoji:'🧱',t:'A brick'}],0),
+    M('A fast-shaking sound wave makes a ___ sound.',['high','low'],0)
+  ],
+  electricity:[
+    M('To light a bulb, electricity needs a complete ___.',['circuit','cup'],0),
+    M('If the circuit loop is broken, the bulb ___.',['goes out','gets brighter'],0),
+    P('Which is a <b>conductor</b> (lets electricity flow)?',[{emoji:'🔩',t:'Metal'},{emoji:'🪵',t:'Wood'}],0),
+    P('Which is an <b>insulator</b> (stops electricity)?',[{emoji:'🧴',t:'Rubber'},{emoji:'⛓️',t:'Metal chain'}],0),
+    M('A ___ opens and closes a circuit.',['switch','window'],0)
+  ],
+  machines:[
+    M('How fast something moves is its ___.',['speed','color'],0),
+    M('The force that slows things when they rub is ___.',['friction','light'],0),
+    M('How many simple machines are there?',['6','2'],0),
+    P('Which simple machine helps push a load UP easily?',[{emoji:'📐',t:'Ramp'},{emoji:'🧊',t:'Ice cube'}],0),
+    P('A seesaw is an example of a ___.',[{emoji:'⚖️',t:'Lever'},{emoji:'🔋',t:'Battery'}],0)
+  ],
+  erosion:[
+    M('Breaking rock into smaller pieces is ___.',['weathering','lightning'],0),
+    M('Carrying the broken pieces away is ___.',['erosion','freezing'],0),
+    P('What can cause erosion?',[{emoji:'🌊',t:'Moving water'},{emoji:'🧸',t:'A toy'}],0),
+    M('The Grand Canyon was carved by a ___.',['river','fire'],0),
+    M('Weathering and erosion ___ the land.',['slowly change','never touch'],0)
+  ],
+  hazards:[
+    P('Which is a natural hazard?',[{emoji:'🌋',t:'Volcano'},{emoji:'🧸',t:'Teddy bear'}],0),
+    M('An earthquake makes the ground ___.',['shake','freeze'],0),
+    M('A volcano erupts hot ___.',['lava','ice'],0),
+    M('To stay safe we should listen to ___.',['warnings','only music'],0),
+    M('In an earthquake you should…',['drop, cover, hold on','run around blindly'],0)
+  ],
+  moon:[
+    M('The moon circles the ___.',['Earth','Sun'],0),
+    M('The moon’s light really comes from the ___.',['Sun','stars'],0),
+    M('The changing shapes of the moon are called ___.',['phases','tides'],0),
+    P('Which is a <b>full</b> moon?',[{emoji:'🌕',t:'Full'},{emoji:'🌑',t:'New'}],0),
+    M('The moon’s pull causes the ocean’s ___.',['tides','rainbows'],0)
+  ],
+  resources:[
+    M('Things from the earth we use are ___.',['natural resources','toys'],0),
+    P('Which is <b>renewable</b> (can be replaced)?',[{emoji:'🌳',t:'Trees'},{emoji:'⛽',t:'Oil'}],0),
+    M('Oil and coal are ___ (they run out).',['nonrenewable','renewable'],0),
+    P('Which helps save resources?',[{emoji:'♻️',t:'Recycling'},{emoji:'🗑️',t:'Wasting'}],0),
+    M('God gave us the earth to ___.',['care for','destroy'],0)
+  ]
+};
 /* ===== GRADE REGISTRY ===== */
 var TOPICS, QS, TOPIC_ORDER;
 var GRADES={
   'K':{ label:'Kindergarten · God’s World', topics:TOPICS_K, qs:QS_K, order:ORDER_K },
   '1':{ label:'Grade 1 · God’s World', topics:TOPICS_1, qs:QS_1, order:ORDER_1 },
   '2':{ label:'Grade 2 · Earth & Space', topics:TOPICS_2, qs:QS_2, order:ORDER_2 },
-  '3':{ label:'Grade 3 · God’s World', topics:TOPICS_3, qs:QS_3, order:ORDER_3 }
+  '3':{ label:'Grade 3 · God’s World', topics:TOPICS_3, qs:QS_3, order:ORDER_3 },
+  '4':{ label:'Grade 4 · God’s World', topics:TOPICS_4, qs:QS_4, order:ORDER_4 }
 };
 
 var GOOD=['Brilliant! 🌟','You got it! 🎉','Super smart! 🚀','Yes! ⭐','Great thinking! 💡','Nailed it! 👏'];
