@@ -127,14 +127,29 @@ svg.scene{display:block;width:100%;height:auto}
 /* ===== VOICE ===== */
 var soundOn=true;
 function toggleSound(){ soundOn=!soundOn; document.getElementById('sndBtn').textContent=soundOn?'🔊':'🔇';
-  if(!soundOn){try{speechSynthesis.cancel();}catch(e){}} else speakCurrent(); }
+  if(!soundOn)stopSpeak(); else speakCurrent(); }
 function clean(h){ return (h||'').replace(/<[^>]*>/g,' ')
   .replace(/_+/g,' blank ').replace(/½/g,' and a half').replace(/→/g,' ')
   .replace(/[☀️🌙❄️🌷🍂⭐🏠🎉🌟🚀💡👀🤔💪🔆🌍🎮📘🌌🧱💧🗺️⛏️✨✝️🪨🕳️]/gu,' ')
   .replace(/\s+/g,' ').trim(); }
-function speak(h,force){ if(!soundOn&&!force)return; try{speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(clean(h));u.rate=.72;u.pitch=1.02;speechSynthesis.speak(u);}catch(e){} }
-var _cur=''; function speakCurrent(){ if(_cur)speak(_cur); }
-function hearAgain(){ if(_cur)speak(_cur,true); }
+var _cur='', _spkPending=null, _spkBusy=false, _spkGen=0, _spkTimer=null;
+function _spkStart(){
+  if(_spkPending==null){ _spkBusy=false; return; }
+  var h=_spkPending; _spkPending=null; _spkBusy=true;
+  var gen=++_spkGen, txt=clean(h);
+  try{
+    var u=new SpeechSynthesisUtterance(txt); u.rate=.72; u.pitch=1.02;
+    u.onend=function(){ if(gen!==_spkGen)return; clearTimeout(_spkTimer); _spkBusy=false; _spkStart(); };
+    u.onerror=function(){ if(gen!==_spkGen)return; clearTimeout(_spkTimer); _spkBusy=false; _spkStart(); };
+    speechSynthesis.speak(u);
+    clearTimeout(_spkTimer); _spkTimer=setTimeout(function(){ if(gen===_spkGen){ _spkBusy=false; _spkStart(); } }, txt.length*75+1500);
+  }catch(e){ _spkBusy=false; }
+}
+/* speak(): queue the latest line; it plays only after the current one finishes (no cutting / overlap) */
+function speak(h,force){ if(!soundOn&&!force)return; _spkPending=h; if(!_spkBusy)_spkStart(); }
+function stopSpeak(){ _spkGen++; _spkPending=null; _spkBusy=false; clearTimeout(_spkTimer); try{speechSynthesis.cancel();}catch(e){} }
+function speakCurrent(){ if(_cur)speak(_cur); }
+function hearAgain(){ if(!_cur)return; stopSpeak(); _spkPending=_cur; _spkStart(); }
 
 /* ===== STATE ===== */
 var S={ grade:'2', topic:'solar', mode:'learn', step:0 };
@@ -146,7 +161,7 @@ function playDone(k){ return !!gprog().play[k]; }
 function allDone(){ for(var i=0;i<TOPIC_ORDER.length;i++){ if(!learnDone(TOPIC_ORDER[i])||!playDone(TOPIC_ORDER[i]))return false; } return true; }
 function doneCount(){ var n=0; for(var i=0;i<TOPIC_ORDER.length;i++){ if(learnDone(TOPIC_ORDER[i])&&playDone(TOPIC_ORDER[i]))n++; } return n; }
 var AF=null, rotT=0, revPhi=0;
-function clearAnim(){ if(AF){cancelAnimationFrame(AF);AF=null;} try{speechSynthesis.cancel();}catch(e){} }
+function clearAnim(){ if(AF){cancelAnimationFrame(AF);AF=null;} }
 function EL(id){ return document.getElementById(id); }
 
 /* ===== SHARED SVG ===== */
